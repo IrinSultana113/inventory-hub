@@ -1,2 +1,94 @@
-<h1>Dashboard#index</h1>
-<p>Find me in app/views/dashboard/index.html.erb</p>
+
+<div class="container mt-4">
+  <div class="mb-4">
+    <h2>My Dashboard</h2>
+    <p class="text-muted">Manage your personal inventories.</p>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">My Inventories</h4>
+
+        <%= link_to "Create Inventory", new_inventory_path,
+            class: "btn btn-primary btn-sm" %>
+      </div>
+
+      <%= form_with url: dashboard_path, method: :get, local: true do |form| %>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <%= form.label :category, "Filter by Category", class: "form-label" %>
+            <%= form.select :category,
+                options_for_select(
+                  [["All Categories", ""]] + @categories.map { |c| [c, c] },
+                  params[:category]
+                ),
+                {},
+                class: "form-select" %>
+          </div>
+
+          <div class="col-md-4">
+            <%= form.label :sort, "Sort by", class: "form-label" %>
+            <%= form.select :sort,
+                options_for_select(
+                  [["Newest First", "created_at"], ["Title", "title"]],
+                  params[:sort] || "created_at"
+                ),
+                {},
+                class: "form-select" %>
+          </div>
+
+          <div class="col-md-2">
+            <%= form.label :direction, "Direction", class: "form-label" %>
+            <%= form.select :direction,
+                options_for_select(
+                  [["Ascending", "asc"], ["Descending", "desc"]],
+                  params[:direction] || "desc"
+                ),
+                {},
+                class: "form-select" %>
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end gap-2">
+            <%= form.submit "Apply", class: "btn btn-primary" %>
+            <%= link_to "Clear", dashboard_path,
+                class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @my_inventories.any? %>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @my_inventories.each do |inventory| %>
+                <tr>
+                  <td>
+                    <%= link_to inventory.title, inventory_path(inventory),
+                        class: "text-decoration-none fw-semibold" %>
+                  </td>
+                  <td><%= inventory.category %></td>
+                  <td><%= truncate(inventory.description, length: 60) %></td>
+                  <td><%= l(inventory.created_at, format: :long) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert alert-info mb-0">
+          You haven't created any inventories yet.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
