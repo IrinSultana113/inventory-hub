@@ -12,4 +12,5 @@ class User < ApplicationRecord
   def inactive_message
     blocked? ? :locked : super
   end
+  has_many :inventories, dependent: :destroy
 end

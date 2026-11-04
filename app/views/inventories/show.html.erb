@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h2><%= @inventory.title %></h2>
+          <p class="text-muted mb-3">
+            Category: <%= @inventory.category %>
+          </p>
+        </div>
+
+        <%= link_to "All Inventories", inventories_path,
+            class: "btn btn-outline-secondary" %>
+      </div>
+
+      <hr>
+
+      <h5>Description</h5>
+      <p>
+        <%= @inventory.description.presence || "No description provided." %>
+      </p>
+
+      <hr>
+
+      <p class="mb-1">
+        <strong>Owner:</strong> <%= @inventory.user.username %>
+      </p>
+
+      <p class="text-muted">
+        <strong>Created:</strong>
+        <%= l(@inventory.created_at, format: :long) %>
+      </p>
+    </div>
+  </div>
+</div>
