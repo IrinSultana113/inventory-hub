@@ -57,12 +57,16 @@ class InventoriesController < ApplicationController
   end
 
   def authorize_owner!
+    puts "Current user ID: #{current_user.id}"
+    puts "Inventory owner ID: #{@inventory.user_id}"
+    puts "Admin: #{current_user.admin?}"
+
     return if current_user.admin? || @inventory.user_id == current_user.id
 
     redirect_to inventories_path, alert: "You are not authorized to perform this action."
   end
 
   def inventory_params
-    params.require(:inventory).permit(:title, :description, :category)
+    params.require(:inventory).permit(:title, :description, :category, :is_public)
   end
 end
