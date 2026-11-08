@@ -9,6 +9,7 @@ class InventoriesController < ApplicationController
   end
 
   def show
+      @custom_field = @inventory.custom_fields.build
   end
 
   def new
@@ -57,9 +58,6 @@ class InventoriesController < ApplicationController
   end
 
   def authorize_owner!
-    puts "Current user ID: #{current_user.id}"
-    puts "Inventory owner ID: #{@inventory.user_id}"
-    puts "Admin: #{current_user.admin?}"
 
     return if current_user.admin? || @inventory.user_id == current_user.id
 

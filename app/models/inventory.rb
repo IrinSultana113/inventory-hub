@@ -1,5 +1,6 @@
 class Inventory < ApplicationRecord
   belongs_to :user
+  has_many :custom_fields, dependent: :destroy
   validates :title, presence: true
   validates :category, presence: true
 

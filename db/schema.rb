@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_04_155519) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_07_131906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "custom_fields", force: :cascade do |t|
+    t.bigint "inventory_id", null: false
+    t.string "title", null: false
+    t.string "field_type", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "description"
+    t.boolean "show_in_table", default: false, null: false
+    t.index ["inventory_id"], name: "index_custom_fields_on_inventory_id"
+  end
 
   create_table "inventories", force: :cascade do |t|
     t.string "title", null: false
@@ -43,5 +55,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_04_155519) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "custom_fields", "inventories"
   add_foreign_key "inventories", "users"
 end

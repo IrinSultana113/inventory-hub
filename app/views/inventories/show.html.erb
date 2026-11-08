@@ -20,10 +20,138 @@
         <%= @inventory.description.presence || "No description provided." %>
       </p>
 
+      <% if user_signed_in? && (current_user.admin? || @inventory.user_id == current_user.id) %>
+        <hr>
+
+        <h5 class="mb-3">Add Custom Field</h5>
+
+        <%= form_with model: [@inventory, @custom_field] do |form| %>
+          <div class="mb-3">
+            <%= form.label :title, "Field Title" %>
+            <%= form.text_field :title, class: "form-control",
+                placeholder: "e.g. Brand", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :field_type, "Field Type" %>
+            <%= form.select :field_type,
+                CustomField::FIELD_TYPES.map { |type| [type.titleize, type] },
+                { prompt: "Select field type" },
+                class: "form-select", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :description %>
+            <%= form.text_area :description, class: "form-control",
+                rows: 2, placeholder: "Explain what this field is for" %>
+          </div>
+
+          <div class="form-check mb-3">
+            <%= form.check_box :show_in_table, class: "form-check-input" %>
+            <%= form.label :show_in_table,
+                "Show this field in items table",
+                class: "form-check-label" %>
+          </div>
+
+          <%= form.submit "Add Custom Field", class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
+
+      <hr>
+
+      <h5 class="mb-3">Custom Fields</h5>
+
+      <% if @inventory.custom_fields.any? %>
+
+        <% if user_signed_in? && (current_user.admin? || @inventory.user_id == current_user.id) %>
+          <%= form_with url: manage_inventory_custom_fields_path(@inventory),
+              method: :post do %>
+
+            <div class="d-flex gap-2 mb-3">
+              <button type="submit" name="action_type" value="edit"
+                      class="btn btn-outline-primary btn-sm">
+                Edit Selected
+              </button>
+
+              <button type="submit" name="action_type" value="delete"
+                      class="btn btn-danger btn-sm"
+                      onclick="return confirm('Delete selected custom fields?')">
+                Delete Selected
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Select</th>
+                    <th>Field Title</th>
+                    <th>Field Type</th>
+                    <th>Description</th>
+                    <th>Show in Table</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% @inventory.custom_fields.order(:position).each do |field| %>
+                    <tr>
+                      <td>
+                        <%= check_box_tag "custom_field_ids[]", field.id, false %>
+                      </td>
+
+                      <td><%= field.title %></td>
+
+                      <td>
+                        <span class="badge bg-secondary">
+                          <%= field.field_type %>
+                        </span>
+                      </td>
+
+                      <td><%= field.description.presence || "-" %></td>
+
+                      <td><%= field.show_in_table ? "Yes" : "No" %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+
+        <% else %>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Field Title</th>
+                  <th>Field Type</th>
+                  <th>Description</th>
+                  <th>Show in Table</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @inventory.custom_fields.order(:position).each do |field| %>
+                  <tr>
+                    <td><%= field.title %></td>
+                    <td><%= field.field_type %></td>
+                    <td><%= field.description.presence || "-" %></td>
+                    <td><%= field.show_in_table ? "Yes" : "No" %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+
+      <% else %>
+        <p class="text-muted">No custom fields added yet.</p>
+      <% end %>
+
       <hr>
 
       <p class="mb-1">
-        <strong>Owner:</strong> <%= @inventory.user.username %>
+        <strong>Owner:</strong>
+        <%= @inventory.user.username %>
       </p>
 
       <p class="text-muted">

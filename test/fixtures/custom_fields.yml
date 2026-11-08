@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  inventory: one
+  name: MyString
+  field_type: MyString
+  position: 1
+
+two:
+  inventory: two
+  name: MyString
+  field_type: MyString
+  position: 1
