@@ -17,6 +17,12 @@ Rails.application.routes.draw do
         post :manage
       end
     end
+     resources :items, only: %i[index show new create edit update destroy] do
+      collection do
+        delete :bulk_destroy
+        post :manage
+      end
+    end
   end
   get "dashboard", to: "dashboard#index"
   get "up" => "rails/health#show", as: :rails_health_check

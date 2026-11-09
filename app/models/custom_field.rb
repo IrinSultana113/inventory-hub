@@ -1,6 +1,8 @@
 class CustomField < ApplicationRecord
   belongs_to :inventory
 
+  has_many :custom_field_values, dependent: :destroy
+  has_many :items, through: :custom_field_values
   FIELD_TYPES = %w[string text number link boolean].freeze
 
   validates :title, presence: true,

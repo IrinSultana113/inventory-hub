@@ -1,0 +1,46 @@
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h3 class="mb-3">Item Details</h3>
+
+      <p>
+        <strong>Custom ID:</strong>
+        <%= @item.custom_id.presence || "Not generated yet" %>
+      </p>
+
+      <p>
+        <strong>Created By:</strong>
+        <%= @item.user.username %>
+      </p>
+
+      <p>
+        <strong>Created At:</strong>
+        <%= l(@item.created_at, format: :long) %>
+      </p>
+
+      <hr>
+
+      <h5>Custom Fields</h5>
+
+      <% @custom_field_values.each do |field_value| %>
+        <div class="mb-3">
+          <strong><%= field_value.custom_field.title %>:</strong>
+
+          <% if field_value.custom_field.field_type == "boolean" %>
+            <%= field_value.value == "true" ? "Yes" : "No" %>
+          <% elsif field_value.custom_field.field_type == "link" && field_value.value.present? %>
+            <%= link_to field_value.value, field_value.value,
+                target: "_blank", rel: "noopener" %>
+          <% else %>
+            <%= field_value.value.presence || "—" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= link_to "Back to Items",
+          inventory_items_path(@inventory),
+          class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+</div>

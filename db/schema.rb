@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_07_131906) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_08_121527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "custom_field_values", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "custom_field_id", null: false
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["custom_field_id"], name: "index_custom_field_values_on_custom_field_id"
+    t.index ["item_id", "custom_field_id"], name: "index_custom_field_values_on_item_and_field", unique: true
+    t.index ["item_id"], name: "index_custom_field_values_on_item_id"
+  end
 
   create_table "custom_fields", force: :cascade do |t|
     t.bigint "inventory_id", null: false
@@ -37,6 +48,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_07_131906) do
     t.index ["user_id"], name: "index_inventories_on_user_id"
   end
 
+  create_table "items", force: :cascade do |t|
+    t.bigint "inventory_id", null: false
+    t.bigint "user_id", null: false
+    t.string "custom_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_id", "custom_id"], name: "index_items_on_inventory_id_and_custom_id", unique: true
+    t.index ["inventory_id"], name: "index_items_on_inventory_id"
+    t.index ["user_id"], name: "index_items_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -55,6 +77,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_07_131906) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "custom_field_values", "custom_fields"
+  add_foreign_key "custom_field_values", "items"
   add_foreign_key "custom_fields", "inventories"
   add_foreign_key "inventories", "users"
+  add_foreign_key "items", "inventories"
+  add_foreign_key "items", "users"
 end

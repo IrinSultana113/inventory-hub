@@ -146,7 +146,14 @@
       <% else %>
         <p class="text-muted">No custom fields added yet.</p>
       <% end %>
+            <% if @inventory.is_public? ||
+            (user_signed_in? && (current_user.admin? || @inventory.user_id == current_user.id)) %>
 
+        <%= link_to "View Items",
+            inventory_items_path(@inventory),
+            class: "btn btn-primary mt-3 mb-3" %>
+
+      <% end %>
       <hr>
 
       <p class="mb-1">

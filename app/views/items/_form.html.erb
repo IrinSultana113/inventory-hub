@@ -1,0 +1,66 @@
+
+<%= form_with model: [@inventory, @item] do |form| %>
+  <% if @item.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% @item.custom_field_values.each do |field_value| %>
+    <% field = field_value.custom_field %>
+
+    <% next unless field %>
+
+    <%= form.fields_for :custom_field_values, field_value do |value_form| %>
+      <div class="mb-3">
+        <%= value_form.label :value, field.title, class: "form-label" %>
+
+        <% if field.description.present? %>
+          <div class="form-text mb-1">
+            <%= field.description %>
+          </div>
+        <% end %>
+
+        <% case field.field_type %>
+        <% when "string" %>
+          <%= value_form.text_field :value, class: "form-control" %>
+
+        <% when "text" %>
+          <%= value_form.text_area :value, class: "form-control", rows: 3 %>
+
+        <% when "number" %>
+          <%= value_form.number_field :value, class: "form-control", step: :any %>
+
+        <% when "link" %>
+          <%= value_form.url_field :value, class: "form-control",
+              placeholder: "https://example.com" %>
+
+        <% when "boolean" %>
+          <div>
+            <div class="form-check">
+              <%= value_form.radio_button :value, "true",
+                class: "form-check-input" %>
+            <%= value_form.label :value, "Yes",
+                class: "form-check-label" %>
+          </div>
+
+            <div class="form-check">
+              <%= value_form.radio_button :value, "false",
+                class: "form-check-input" %>
+              <%= value_form.label :value, "No",
+                class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+
+        <%= value_form.hidden_field :custom_field_id %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= form.submit class: "btn btn-primary" %>
+<% end %>

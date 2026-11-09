@@ -1,0 +1,142 @@
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3><%= @inventory.title %> — Items</h3>
+      <p class="text-muted mb-0">Inventory items table</p>
+    </div>
+
+    <% if @inventory.can_write_items?(current_user) %>
+      <%= link_to "Add New Item", new_inventory_item_path(@inventory),
+          class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <% if @inventory.can_write_items?(current_user) %>
+    <%= form_with url: bulk_destroy_inventory_items_path(@inventory),
+        method: :delete do %>
+
+      <div class="mb-3">
+        <%= button_tag "Edit Selected",
+            type: "submit",
+            name: "action_type",
+            value: "edit",
+            formaction: manage_inventory_items_path(@inventory),
+            formmethod: "post",
+            class: "btn btn-warning me-2" %>
+
+        <%= submit_tag "Delete Selected",
+            class: "btn btn-danger",
+            data: { turbo_confirm: "Delete selected items?" } %>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Select</th>
+              <th>Custom ID</th>
+              <th>Created By</th>
+              <th>Created At</th>
+
+              <% @custom_fields.each do |field| %>
+                <th><%= field.title %></th>
+              <% end %>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @items.each do |item| %>
+              <tr>
+                <td>
+                  <%= check_box_tag "item_ids[]", item.id, false %>
+                </td>
+
+                <td>
+                  <%= link_to item.custom_id.presence || "Not generated",
+                      inventory_item_path(@inventory, item) %>
+                </td>
+
+                <td><%= item.user.username %></td>
+                <td><%= l(item.created_at, format: :short) %></td>
+
+                <% @custom_fields.each do |field| %>
+                  <% field_value = item.custom_field_values.find {
+                    |value| value.custom_field_id == field.id
+                  } %>
+
+                  <td>
+                    <% if field_value %>
+                      <% if field.field_type == "boolean" %>
+                        <%= field_value.value == "true" ? "Yes" : "No" %>
+                      <% else %>
+                        <%= field_value.value.presence || "—" %>
+                      <% end %>
+                    <% else %>
+                      —
+                    <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Custom ID</th>
+            <th>Created By</th>
+            <th>Created At</th>
+
+            <% @custom_fields.each do |field| %>
+              <th><%= field.title %></th>
+            <% end %>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @items.each do |item| %>
+            <tr>
+              <td>
+                <%= link_to item.custom_id.presence || "Not generated",
+                    inventory_item_path(@inventory, item) %>
+              </td>
+
+              <td><%= item.user.username %></td>
+              <td><%= l(item.created_at, format: :short) %></td>
+
+              <% @custom_fields.each do |field| %>
+                <% field_value = item.custom_field_values.find {
+                  |value| value.custom_field_id == field.id
+                } %>
+
+                <td>
+                  <% if field_value %>
+                    <%= field.field_type == "boolean" ?
+                        (field_value.value == "true" ? "Yes" : "No") :
+                        field_value.value.presence || "—" %>
+                  <% else %>
+                    —
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <% if @items.empty? %>
+    <p class="text-muted text-center mt-4">No items found.</p>
+  <% end %>
+
+  <%= link_to "Back to Inventory",
+      inventory_path(@inventory),
+      class: "btn btn-outline-secondary mt-3" %>
+</div>
