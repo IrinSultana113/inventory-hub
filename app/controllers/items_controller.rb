@@ -23,10 +23,23 @@ class ItemsController < ApplicationController
   def create
     @item = @inventory.items.build(item_params)
     @item.user = current_user
+    @inventory.with_lock do
+      sequence_number = @inventory.items.maximum(:sequence_number).to_i + 1
 
-    if @item.save
+      @item.sequence_number = sequence_number
+      @item.custom_id = CustomIdGenerator.new(
+        @inventory,
+        sequence_number: sequence_number
+      ).generate
+
+      unless @item.save
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    if @item.persisted?
       redirect_to inventory_items_path(@inventory),
-                  notice: "Item created successfully."
+                notice: "Item created successfully."
     else
       render_item_form(:new)
     end
@@ -142,5 +155,12 @@ class ItemsController < ApplicationController
     params.require(:item).permit(
       custom_field_values_attributes: %i[id custom_field_id value]
     )
+  end
+  def generate_custom_id
+    @inventory.update!(
+      custom_id_sequence: @inventory.custom_id_sequence + 1
+    )
+
+    CustomIdGenerator.new(@inventory).generate
   end
 end

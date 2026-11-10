@@ -8,6 +8,13 @@ class Inventory < ApplicationRecord
   scope :public_inventories, -> { where(is_public: true) }
   scope :private_inventories, -> { where(is_public: false) }
 
+  attribute :custom_id_format, default: -> {
+  [
+    { "type" => "fixed_text", "value" => "ITEM-" },
+    { "type" => "sequence", "length" => 4 }
+  ]
+}
+
   def can_write_items?(user)
     return false unless user
 

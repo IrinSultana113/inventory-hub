@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_08_121527) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_10_072140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -45,6 +45,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_121527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_public", default: false, null: false
+    t.jsonb "custom_id_format"
+    t.integer "custom_id_sequence", default: 0, null: false
     t.index ["user_id"], name: "index_inventories_on_user_id"
   end
 
@@ -54,6 +56,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_121527) do
     t.string "custom_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "sequence_number"
     t.index ["inventory_id", "custom_id"], name: "index_items_on_inventory_id_and_custom_id", unique: true
     t.index ["inventory_id"], name: "index_items_on_inventory_id"
     t.index ["user_id"], name: "index_items_on_user_id"
