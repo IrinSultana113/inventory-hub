@@ -29,13 +29,13 @@ class CustomIdGenerator
     when "sequence"
       generate_sequence(element)
     when "random_20bit"
-      generate_20bit_random
+      generate_20bit_random(element)
     when "random_32bit"
-      generate_32bit_random
+      generate_32bit_random(element)
     when "random_6_digit"
-      generate_6_digit_random
+      generate_6_digit_random(element)
     when "random_9_digit"
-      generate_9_digit_random
+      generate_9_digit_random(element)
     when "guid"
       generate_guid
     when "date"
@@ -46,25 +46,44 @@ class CustomIdGenerator
       raise ArgumentError, "Unsupported ID element: #{element["type"]}"
     end
   end
+  
+  def format_number(number, format)
+    format_type = format.to_s.first
+    length = format.to_s[1..-1].to_i
+
+    formatted_number =
+      if format_type == "X"
+        number.to_i.to_s(16).upcase
+      else
+        number.to_i.to_s
+      end
+
+    formatted_number.rjust(length, "0")
+  end  
 
   def generate_sequence(element)
-    @sequence_number.to_s.rjust(element.fetch("length", 4).to_i, "0")
+    format = element.fetch("format", "D4")
+    format_number(@sequence_number, format)
   end
 
-  def generate_20bit_random
-    SecureRandom.random_number(2**20).to_s
+  def generate_20bit_random(element)
+    number = SecureRandom.random_number(2**20)
+    format_number(number, element.fetch("format", "D7"))
   end
 
-  def generate_32bit_random
-    SecureRandom.random_number(2**32).to_s
+  def generate_32bit_random(element)
+    number = SecureRandom.random_number(2**32)
+    format_number(number, element.fetch("format", "D10"))
   end
 
-  def generate_6_digit_random
-    SecureRandom.random_number(1_000_000).to_s.rjust(6, "0")
+  def generate_6_digit_random(element)
+    number = SecureRandom.random_number(1_000_000)
+    format_number(number, element.fetch("format", "D6"))
   end
 
-  def generate_9_digit_random
-    SecureRandom.random_number(1_000_000_000).to_s.rjust(9, "0")
+  def generate_9_digit_random(element)
+    number = SecureRandom.random_number(1_000_000_000)
+    format_number(number, element.fetch("format", "D9"))
   end
 
   def generate_guid

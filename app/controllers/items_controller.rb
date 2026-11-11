@@ -27,10 +27,12 @@ class ItemsController < ApplicationController
       sequence_number = @inventory.items.maximum(:sequence_number).to_i + 1
 
       @item.sequence_number = sequence_number
-      @item.custom_id = CustomIdGenerator.new(
-        @inventory,
-        sequence_number: sequence_number
-      ).generate
+      if @item.custom_id.blank?
+        @item.custom_id = CustomIdGenerator.new(
+          @inventory,
+          sequence_number: sequence_number
+        ).generate
+      end
 
       unless @item.save
         raise ActiveRecord::Rollback
@@ -150,17 +152,9 @@ class ItemsController < ApplicationController
       @item.custom_field_values.build(custom_field: field)
     end
   end
-
   def item_params
     params.require(:item).permit(
-      custom_field_values_attributes: %i[id custom_field_id value]
+      :custom_id, custom_field_values_attributes: %i[id custom_field_id value]
     )
-  end
-  def generate_custom_id
-    @inventory.update!(
-      custom_id_sequence: @inventory.custom_id_sequence + 1
-    )
-
-    CustomIdGenerator.new(@inventory).generate
   end
 end

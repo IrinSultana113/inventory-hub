@@ -9,6 +9,19 @@
       </ul>
     </div>
   <% end %>
+  <div class="mb-3">
+      <%= form.label :custom_id, "Custom ID", class: "form-label" %>
+
+      <%= form.text_field :custom_id,
+        class: "form-control",
+        placeholder: "Enter Custom ID" %>
+
+      <div class="form-text">
+        You can edit the Custom ID.
+        Leave it blank to generate one automatically.
+      </div>
+    </div>
+
 
   <% @item.custom_field_values.each do |field_value| %>
     <% field = field_value.custom_field %>
