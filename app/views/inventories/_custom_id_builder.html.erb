@@ -1,0 +1,199 @@
+
+<div data-controller="custom-id-builder">
+
+  <h5 class="mb-3">Custom ID Format</h5>
+
+  <div class="mb-3">
+    <label class="form-label">Add ID Element</label>
+
+    <% elements = [
+      ["fixed_text", "Fixed Text",
+       "Adds your own fixed text to the Custom ID. You can use letters, numbers, spaces and Unicode characters.",
+       "BOOK- → BOOK-0001"],
+
+      ["sequence", "Sequence",
+       "Automatically generates the next number for each new item. D4 means 4 digits, D6 means 6 digits. X means hexadecimal.",
+       "D4 → 0001, D6 → 000001, X5 → 000FF"],
+
+      ["random_20bit", "20-bit Random",
+       "Generates a random 20-bit number. You can choose decimal (D) or hexadecimal (X) formatting.",
+       "D7 → 0123456, X5 → 0ABCD"],
+
+      ["random_32bit", "32-bit Random",
+       "Generates a random 32-bit number. Supports decimal and hexadecimal formats.",
+       "D10 → 1234567890, X8 → 00ABCDEF"],
+
+      ["random_6_digit", "6-digit Random",
+       "Generates a random number using the 6-digit random element. You can customize its number format.",
+       "D6 → 123456"],
+
+      ["random_9_digit", "9-digit Random",
+       "Generates a random number using the 9-digit random element. You can customize its number format.",
+       "D9 → 123456789"],
+
+      ["guid", "GUID",
+       "Generates a globally unique identifier containing letters, numbers and hyphens.",
+       "550e8400-e29b-41d4-a716-446655440000"],
+
+      ["date", "Date",
+       "Adds the current date when an item is created. The format is YYYYMMDD.",
+       "20261112"],
+
+      ["time", "Time",
+       "Adds the current time when an item is created. The format is HHMMSS.",
+       "143025"]
+    ] %>
+
+    <div class="d-flex flex-wrap gap-2">
+      <% elements.each do |type, label, help, example| %>
+
+        <div class="d-inline-flex align-items-center gap-1">
+          <button type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  data-action="click->custom-id-builder#add"
+                  data-type="<%= type %>">
+            + <%= label %>
+          </button>
+
+          <details class="position-relative">
+            <summary class="text-primary"
+                     style="cursor:pointer; list-style:none;"
+                     title="Learn about <%= label %>">
+              ⓘ
+            </summary>
+
+            <div class="card shadow p-3 position-absolute"
+                 style="z-index: 10; width: 280px; left: 0; top: 25px;">
+              <strong><%= label %></strong>
+
+              <p class="small mt-2 mb-2">
+                <%= help %>
+              </p>
+
+              <div class="small text-muted">
+                <strong>Example:</strong>
+                <%= example %>
+              </div>
+            </div>
+          </details>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+
+  <div data-custom-id-builder-target="list"
+       data-action="dragover->custom-id-builder#allowDrop drop->custom-id-builder#dropInside"
+       class="border rounded p-3 mb-3">
+
+    <% (@inventory.custom_id_format || []).each do |element| %>
+      <div data-id-element
+           data-element-type="<%= element["type"] %>"
+           draggable="true"
+           data-action="dragstart->custom-id-builder#dragStart dragend->custom-id-builder#dragEnd"
+           class="card p-3 mb-2">
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <strong data-element-type>
+            <%= element["type"].humanize %>
+          </strong>
+
+          <button type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  data-action="click->custom-id-builder#remove">
+            Remove
+          </button>
+        </div>
+
+        <input type="hidden"
+               name="inventory[custom_id_format][][type]"
+               value="<%= element["type"] %>"
+               data-type-input>
+
+        <% if element["type"] == "fixed_text" %>
+          <div data-fixed-text-input>
+            <label class="form-label">Text</label>
+
+            <input type="text"
+                   name="inventory[custom_id_format][][value]"
+                   value="<%= element["value"] %>"
+                   class="form-control"
+                   data-value-input
+                   data-action="input->custom-id-builder#updatePreview">
+          </div>
+        <% end %>
+
+        <% if ["sequence", "random_20bit", "random_32bit",
+               "random_6_digit", "random_9_digit"].include?(element["type"]) %>
+
+          <div data-number-format-input>
+            <label class="form-label">Number Format</label>
+
+            <input type="text"
+                   name="inventory[custom_id_format][][format]"
+                   value="<%= element["format"] || "D4" %>"
+                   class="form-control"
+                   placeholder="D4, D6, X5"
+                   data-format-input
+                   data-action="input->custom-id-builder#updatePreview">
+          </div>
+        <% end %>
+
+      </div>
+    <% end %>
+
+  </div>
+
+  <template data-custom-id-builder-target="template">
+    <div data-id-element
+         draggable="true"
+         data-action="dragstart->custom-id-builder#dragStart dragend->custom-id-builder#dragEnd"
+         class="card p-3 mb-2">
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <strong data-element-type></strong>
+
+        <button type="button"
+                class="btn btn-outline-danger btn-sm"
+                data-action="click->custom-id-builder#remove">
+          Remove
+        </button>
+      </div>
+
+      <input type="hidden"
+             name="inventory[custom_id_format][][type]"
+             data-type-input>
+
+      <div data-fixed-text-input>
+        <label class="form-label">Text</label>
+
+        <input type="text"
+               name="inventory[custom_id_format][][value]"
+               class="form-control"
+               data-value-input
+               data-action="input->custom-id-builder#updatePreview">
+      </div>
+
+      <div data-number-format-input>
+        <label class="form-label">Number Format</label>
+
+        <input type="text"
+               name="inventory[custom_id_format][][format]"
+               class="form-control"
+               placeholder="D4, D6, X5"
+               data-format-input
+               data-action="input->custom-id-builder#updatePreview">
+      </div>
+
+    </div>
+  </template>
+
+  <div class="alert alert-info">
+    <strong>Example Preview:</strong>
+
+    <div data-custom-id-builder-target="preview"
+         class="fw-bold fs-5 mt-2">
+    </div>
+  </div>
+
+</div>

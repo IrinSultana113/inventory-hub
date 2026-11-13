@@ -11,7 +11,7 @@ class Inventory < ApplicationRecord
   attribute :custom_id_format, default: -> {
   [
     { "type" => "fixed_text", "value" => "ITEM-" },
-    { "type" => "sequence", "length" => 4 }
+    { "type" => "sequence", "format" => "D4" }
   ]
 }
 

@@ -36,7 +36,9 @@
                 Public inventories allow all logged-in users to create, edit, and delete items.
               </div>
             </div>
-
+            <div class="mb-4">
+              <%= render "custom_id_builder", inventory: @inventory %>
+            </div>
             <div class="d-flex gap-2">
               <%= form.submit "Update Inventory", class: "btn btn-primary" %>
               <%= link_to "Cancel", @inventory, class: "btn btn-outline-secondary" %>

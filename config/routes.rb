@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   root "home#index"
 
   resources :inventories do
+    member do
+      get :custom_id_format
+      patch :update_custom_id_format
+    end
     collection do
       delete :bulk_destroy
     end

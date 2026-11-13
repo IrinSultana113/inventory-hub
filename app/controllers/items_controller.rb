@@ -28,10 +28,22 @@ class ItemsController < ApplicationController
 
       @item.sequence_number = sequence_number
       if @item.custom_id.blank?
-        @item.custom_id = CustomIdGenerator.new(
-          @inventory,
-          sequence_number: sequence_number
-        ).generate
+        100.times do
+          @item.custom_id = CustomIdGenerator.new(
+            @inventory,
+            sequence_number: sequence_number
+          ).generate
+
+          break unless @inventory.items.exists?(custom_id: @item.custom_id)
+
+          sequence_number += 1
+          @item.sequence_number = sequence_number
+        end
+
+        if @inventory.items.exists?(custom_id: @item.custom_id)
+          @item.errors.add(:custom_id, "could not generate a unique ID")
+          raise ActiveRecord::Rollback
+       end
       end
 
       unless @item.save

@@ -1,0 +1,37 @@
+
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3>Custom ID Format</h3>
+          <p class="text-muted">
+            Configure Custom ID for <%= @inventory.title %>
+          </p>
+        </div>
+
+        <%= link_to "Back to Inventory",
+            inventory_path(@inventory),
+            class: "btn btn-outline-secondary" %>
+      </div>
+
+      <hr>
+
+      <%= form_with model: @inventory,
+          url: update_custom_id_format_inventory_path(@inventory),
+          method: :patch do |form| %>
+
+        <%= render "custom_id_builder" %>
+
+        <div class="mt-4">
+          <%= form.submit "Save Custom ID Format",
+              class: "btn btn-primary" %>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+</div>
