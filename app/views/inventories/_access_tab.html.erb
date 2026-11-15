@@ -1,0 +1,167 @@
+
+<div class="mb-3">
+  <h4>Manage Access</h4>
+  <p class="text-muted">
+    Give specific users permission to add, edit and delete items.
+  </p>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="mb-3">Add User</h5>
+
+    <%= form_with url: inventory_inventory_accesses_path(@inventory),
+      method: :post,
+      id: "add-inventory-access-form",
+      data: { turbo: false } do %>
+
+      <div class="mb-3">
+        <label for="access-user-search" class="form-label">
+          Search by username or email
+        </label>
+
+        <input type="text"
+               id="access-user-search"
+               class="form-control"
+               placeholder="Type username or email..."
+               autocomplete="off"
+               data-search-url="<%= user_search_inventory_path(@inventory) %>">
+
+        <input type="hidden" name="user_id" id="access-user-id">
+
+        <div id="access-search-results"
+             class="list-group mt-2"></div>
+
+        <div id="selected-access-user"
+             class="text-success mt-2"></div>
+      </div>
+
+      <button type="submit"
+              id="add-access-button"
+              class="btn btn-primary"
+              disabled>
+        Grant Access
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<h5 class="mb-3">Users with Access</h5>
+
+<div class="mb-3">
+  Sort by:
+  <%= link_to "Username",
+      inventory_path(@inventory, sort: "username", anchor: "access"),
+      class: "btn btn-sm btn-outline-secondary" %>
+
+  <%= link_to "Email",
+      inventory_path(@inventory, sort: "email", anchor: "access"),
+      class: "btn btn-sm btn-outline-secondary" %>
+</div>
+
+<% if @inventory_accesses.any? %>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @inventory_accesses.each do |access| %>
+          <tr>
+            <td><%= access.user.username %></td>
+            <td><%= access.user.email %></td>
+            <td>
+              <%= button_to "Remove Access",
+                  inventory_inventory_access_path(@inventory, access),
+                  method: :delete,
+                  class: "btn btn-sm btn-danger",
+                  data: { turbo: false, confirm: "Remove this user's access?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">No users have been given access yet.</p>
+<% end %>
+
+<script>
+  (() => {
+    const searchInput = document.getElementById("access-user-search");
+    const resultsBox = document.getElementById("access-search-results");
+    const userIdInput = document.getElementById("access-user-id");
+    const selectedUser = document.getElementById("selected-access-user");
+    const addButton = document.getElementById("add-access-button");
+    const form = document.getElementById("add-inventory-access-form");
+
+    if (!searchInput || searchInput.dataset.initialized) return;
+    searchInput.dataset.initialized = "true";
+
+    let searchTimer;
+
+    searchInput.addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      userIdInput.value = "";
+      selectedUser.textContent = "";
+      addButton.disabled = true;
+      resultsBox.replaceChildren();
+
+      const query = searchInput.value.trim();
+      if (query.length < 2) return;
+
+      searchTimer = setTimeout(async () => {
+        try {
+          const url = new URL(searchInput.dataset.searchUrl, window.location.origin);
+          url.searchParams.set("q", query);
+
+          const response = await fetch(url, {
+            headers: { "Accept": "application/json" }
+          });
+
+          if (!response.ok) return;
+
+          const users = await response.json();
+
+          users.forEach((user) => {
+            const option = document.createElement("button");
+            option.type = "button";
+            option.className = "list-group-item list-group-item-action";
+            option.textContent = `${user.username} (${user.email})`;
+
+            option.addEventListener("click", () => {
+              userIdInput.value = user.id;
+              searchInput.value = user.username;
+              selectedUser.textContent = `Selected: ${user.username}`;
+              addButton.disabled = false;
+              resultsBox.replaceChildren();
+            });
+
+            resultsBox.appendChild(option);
+          });
+
+          if (users.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "list-group-item text-muted";
+            empty.textContent = "No matching users found.";
+            resultsBox.appendChild(empty);
+          }
+        } catch (error) {
+          console.error("User search failed:", error);
+        }
+      }, 300);
+    });
+
+    form.addEventListener("submit", (event) => {
+      if (!userIdInput.value) {
+        event.preventDefault();
+        alert("Please select a user from the search results.");
+      }
+    });
+  })();
+</script>

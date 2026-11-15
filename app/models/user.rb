@@ -4,6 +4,8 @@ class User < ApplicationRecord
 
   has_many :inventories, dependent: :destroy
   has_many :items, dependent: :destroy
+  has_many :inventory_accesses, dependent: :destroy
+  has_many :accessible_inventories, through: :inventory_accesses, source: :inventory
         
   validates :username, presence: true, uniqueness: true
   validates :locale, inclusion: { in: %w[en de] }

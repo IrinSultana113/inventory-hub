@@ -141,11 +141,7 @@ class ItemsController < ApplicationController
   end
 
   def authorize_item_view!
-    return if @inventory.is_public?
-    return if current_user && (current_user.admin? || @inventory.user_id == current_user.id)
-
-    redirect_to inventories_path,
-                alert: "You are not authorized to view these items."
+  # All users, including guests, can view items.
   end
 
   def authorize_item_write!

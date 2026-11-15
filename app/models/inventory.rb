@@ -2,6 +2,9 @@ class Inventory < ApplicationRecord
   belongs_to :user
   has_many :custom_fields, dependent: :destroy
   has_many :items, dependent: :destroy
+
+  has_many :inventory_accesses, dependent: :destroy
+  has_many :authorized_users, through: :inventory_accesses, source: :user
   validates :title, presence: true
   validates :category, presence: true
 
@@ -18,6 +21,6 @@ class Inventory < ApplicationRecord
   def can_write_items?(user)
     return false unless user
 
-    user.admin? || user_id == user.id || is_public?
+    user.admin? || user_id == user.id || is_public? || inventory_accesses.exists?(user_id: user.id)
   end
 end

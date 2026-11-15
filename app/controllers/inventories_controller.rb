@@ -1,7 +1,7 @@
 class InventoriesController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create edit update destroy bulk_destroy custom_id_format update_custom_id_format]
-  before_action :set_inventory, only: %i[show edit update destroy custom_id_format update_custom_id_format]
-  before_action :authorize_owner!, only: %i[edit update destroy custom_id_format update_custom_id_format]
+  before_action :authenticate_user!, only: %i[new create edit update destroy bulk_destroy custom_id_format update_custom_id_format access user_search]
+  before_action :set_inventory, only: %i[show edit update destroy custom_id_format update_custom_id_format access user_search]
+  before_action :authorize_owner!, only: %i[edit update destroy custom_id_format update_custom_id_format access user_search]
 
 
   def index
@@ -9,7 +9,13 @@ class InventoriesController < ApplicationController
   end
 
   def show
-      @custom_field = @inventory.custom_fields.build
+    @custom_field = @inventory.custom_fields.build
+    @items = @inventory.items.includes(:user, :custom_field_values)
+                     .order(created_at: :desc)
+    @custom_fields = @inventory.custom_fields
+                             .where(show_in_table: true)
+                             .order(:position)
+    @inventory_accesses = sorted_inventory_accesses if can_manage_inventory?
   end
 
   def new
@@ -28,9 +34,10 @@ class InventoriesController < ApplicationController
 
   def edit
   end
+
   def update
     if @inventory.update(inventory_params)
-      redirect_to @inventory, notice: "Inventory updated successfully."
+      redirect_to inventory_path(@inventory, anchor: "settings"), notice: "Inventory updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -51,6 +58,16 @@ class InventoriesController < ApplicationController
     else
       render :custom_id_format, status: :unprocessable_entity
     end
+  end
+
+  def access
+    sort_column = params[:sort] == "email" ? :email : :username
+
+    @authorized_users = @inventory.authorized_users.order(sort_column)
+  end
+
+  def user_search
+    render json: user_search_results
   end
 
   def bulk_destroy
@@ -104,5 +121,42 @@ class InventoriesController < ApplicationController
     end
 
     permitted_params
+  end
+
+  def user_search_results
+    return [] if search_query.blank?
+
+    searchable_users.map do |user|
+      {
+        id: user.id, username: user.username, email: user.email
+      }
+    end
+    end
+
+  def search_query
+    params[:q].to_s.strip
+  end
+
+  def searchable_users
+    query = "%#{ActiveRecord::Base.sanitize_sql_like(search_query)}%"
+
+    User.where(blocked: false)
+      .where.not(id: [current_user.id, @inventory.user_id])
+      .where("username ILIKE :query OR email ILIKE :query", query: query)
+      .order(:username)
+      .limit(10)
+  end
+
+  def can_manage_inventory?
+    current_user&.admin? || @inventory.user_id == current_user&.id
+    end
+
+  def sorted_inventory_accesses
+    column = params[:sort] == "email" ? "users.email" : "users.username"
+
+    @inventory.inventory_accesses
+            .joins(:user)
+            .includes(:user)
+            .order(column)
   end
 end

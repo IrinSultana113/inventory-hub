@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     member do
       get :custom_id_format
       patch :update_custom_id_format
+      get :access
+      get :user_search
     end
     collection do
       delete :bulk_destroy
@@ -27,6 +29,7 @@ Rails.application.routes.draw do
         post :manage
       end
     end
+    resources :inventory_accesses, only: %i[create destroy]
   end
   get "dashboard", to: "dashboard#index"
   get "up" => "rails/health#show", as: :rails_health_check
