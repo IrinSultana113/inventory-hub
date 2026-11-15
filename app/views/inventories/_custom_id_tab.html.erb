@@ -1,0 +1,49 @@
+
+<div class="mb-3">
+  <h4>Custom ID Format</h4>
+  <p class="text-muted">
+    Configure how unique IDs are automatically generated for new items.
+  </p>
+</div>
+
+<% can_manage = user_signed_in? &&
+    (current_user.admin? || @inventory.user_id == current_user.id) %>
+
+<% if can_manage %>
+
+  <%= form_with model: @inventory,
+      url: update_custom_id_format_inventory_path(@inventory),
+      method: :patch do |form| %>
+
+    <%= render "custom_id_builder" %>
+
+    <div class="mt-4">
+      <%= form.submit "Save Custom ID Format",
+          class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+<% else %>
+
+  <p class="text-muted">
+    You can view the inventory items, but only the inventory owner
+    or an admin can change the Custom ID format.
+  </p>
+
+  <h5>Current ID Format</h5>
+
+  <% @inventory.effective_custom_id_format.each do |element| %>
+    <div class="border rounded p-2 mb-2">
+      <strong><%= element["type"].to_s.titleize %></strong>
+
+      <% if element["value"].present? %>
+        — <%= element["value"] %>
+      <% end %>
+
+      <% if element["format"].present? %>
+        — <%= element["format"] %>
+      <% end %>
+    </div>
+  <% end %>
+
+<% end %>

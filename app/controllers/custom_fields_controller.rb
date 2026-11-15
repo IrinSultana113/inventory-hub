@@ -9,7 +9,7 @@ class CustomFieldsController < ApplicationController
     @custom_field.position = @inventory.custom_fields.maximum(:position).to_i + 1
 
     if @custom_field.save
-      redirect_to @inventory, notice: "Custom field added successfully."
+      redirect_to inventory_path(@inventory, anchor: "custom-fields"), notice: "Custom field added successfully."
     else
       redirect_to @inventory, alert: @custom_field.errors.full_messages.to_sentence
     end
@@ -20,7 +20,7 @@ class CustomFieldsController < ApplicationController
 
   def update
     if @custom_field.update(custom_field_params)
-      redirect_to @inventory, notice: "Custom field updated successfully."
+      redirect_to inventory_path(@inventory, anchor: "custom-fields")
     else
       redirect_to @inventory, alert: @custom_field.errors.full_messages.to_sentence
     end
@@ -28,7 +28,7 @@ class CustomFieldsController < ApplicationController
 
   def destroy
     @custom_field.destroy
-    redirect_to @inventory, notice: "Custom field deleted successfully."
+     redirect_to inventory_path(@inventory, anchor: "custom-fields"), notice: "Custom field deleted successfully."
   end
 
   def manage
@@ -41,13 +41,13 @@ class CustomFieldsController < ApplicationController
       if fields.count == 1
         redirect_to edit_inventory_custom_field_path(@inventory, fields.first)
       else
-        redirect_to @inventory, alert: "Select only one field to edit."
+        redirect_to inventory_path(@inventory, anchor: "custom-fields"), alert: "Select only one field to edit."
       end
     elsif params[:action_type] == "delete"
       fields.destroy_all
-      redirect_to @inventory, notice: "Selected custom fields deleted successfully."
+      redirect_to inventory_path(@inventory, anchor: "custom-fields"), notice: "Selected custom fields deleted successfully."
     else
-      redirect_to @inventory, alert: "Invalid action."
+      redirect_to inventory_path(@inventory, anchor: "custom-fields"), alert: "Invalid action."
     end
   end
 

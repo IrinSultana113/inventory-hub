@@ -1,179 +1,215 @@
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
   <div class="card shadow-sm">
     <div class="card-body p-4">
-      <div class="d-flex justify-content-between align-items-start">
+      <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h2><%= @inventory.title %></h2>
-          <p class="text-muted mb-3">
+          <p class="text-muted mb-0">
             Category: <%= @inventory.category %>
           </p>
         </div>
 
-        <%= link_to "All Inventories", inventories_path,
+        <%= link_to "All Inventories",
+            inventories_path,
             class: "btn btn-outline-secondary" %>
       </div>
 
       <hr>
 
-      <h5>Description</h5>
-      <p>
-        <%= @inventory.description.presence || "No description provided." %>
-      </p>
+      <% can_manage = user_signed_in? &&
+          (current_user.admin? || @inventory.user_id == current_user.id) %>
 
-      <% if user_signed_in? &&
-            (current_user.admin? || @inventory.user_id == current_user.id) %>
-        <hr>
-        <h5>Custom ID Format</h5>
-        <p class="text-muted">
-          Configure how item IDs are automatically generated.
-        </p>
-        <%= link_to "Manage Custom ID Format",
-            custom_id_format_inventory_path(@inventory),
-            class: "btn btn-outline-primary mb-3" %>
-        <hr>
+      <% can_write = @inventory.can_write_items?(current_user) %>
 
-        <h5 class="mb-3">Add Custom Field</h5>
+      <ul class="nav nav-tabs mb-4" id="inventoryTabs" role="tablist">
 
-        <%= form_with model: [@inventory, @custom_field] do |form| %>
-          <div class="mb-3">
-            <%= form.label :title, "Field Title" %>
-            <%= form.text_field :title, class: "form-control",
-                placeholder: "e.g. Brand", required: true %>
-          </div>
+        <li class="nav-item">
+          <button class="nav-link active"
+                  id="items-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#items"
+                  type="button">
+            Items
+          </button>
+        </li>
 
-          <div class="mb-3">
-            <%= form.label :field_type, "Field Type" %>
-            <%= form.select :field_type,
-                CustomField::FIELD_TYPES.map { |type| [type.titleize, type] },
-                { prompt: "Select field type" },
-                class: "form-select", required: true %>
-          </div>
+        <li class="nav-item">
+          <button class="nav-link"
+                  id="discussion-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#discussion"
+                  type="button">
+            Discussion
+          </button>
+        </li>
 
-          <div class="mb-3">
-            <%= form.label :description %>
-            <%= form.text_area :description, class: "form-control",
-                rows: 2, placeholder: "Explain what this field is for" %>
-          </div>
+        <li class="nav-item">
+          <button class="nav-link"
+                  id="settings-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#settings"
+                  type="button">
+            General Settings
+          </button>
+        </li>
 
-          <div class="form-check mb-3">
-            <%= form.check_box :show_in_table, class: "form-check-input" %>
-            <%= form.label :show_in_table,
-                "Show this field in items table",
-                class: "form-check-label" %>
-          </div>
+        <li class="nav-item">
+          <button class="nav-link"
+                  id="custom-id-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#custom-id"
+                  type="button">
+            Custom ID
+          </button>
+        </li>
 
-          <%= form.submit "Add Custom Field", class: "btn btn-primary" %>
+        <% if can_manage %>
+          <li class="nav-item">
+            <button class="nav-link"
+                    id="access-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#access"
+                    type="button">
+              Access
+            </button>
+          </li>
         <% end %>
-      <% end %>
 
-      <hr>
+        <li class="nav-item">
+          <button class="nav-link"
+                  id="custom-fields-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#custom-fields"
+                  type="button">
+            Custom Fields
+          </button>
+        </li>
 
-      <h5 class="mb-3">Custom Fields</h5>
+        <li class="nav-item">
+          <button class="nav-link"
+                  id="statistics-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#statistics"
+                  type="button">
+            Statistics
+          </button>
+        </li>
 
-      <% if @inventory.custom_fields.any? %>
+      </ul>
 
-        <% if user_signed_in? && (current_user.admin? || @inventory.user_id == current_user.id) %>
-          <%= form_with url: manage_inventory_custom_fields_path(@inventory),
-              method: :post do %>
+      <div class="tab-content">
 
-            <div class="d-flex gap-2 mb-3">
-              <button type="submit" name="action_type" value="edit"
-                      class="btn btn-outline-primary btn-sm">
-                Edit Selected
-              </button>
+        <!-- 1. Items -->
+        <div class="tab-pane fade show active"
+             id="items"
+             role="tabpanel">
 
-              <button type="submit" name="action_type" value="delete"
-                      class="btn btn-danger btn-sm"
-                      onclick="return confirm('Delete selected custom fields?')">
-                Delete Selected
-              </button>
-            </div>
+          <%= render "items_tab" %>
 
-            <div class="table-responsive">
-              <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                  <tr>
-                    <th>Select</th>
-                    <th>Field Title</th>
-                    <th>Field Type</th>
-                    <th>Description</th>
-                    <th>Show in Table</th>
-                  </tr>
-                </thead>
+        </div>
 
-                <tbody>
-                  <% @inventory.custom_fields.order(:position).each do |field| %>
-                    <tr>
-                      <td>
-                        <%= check_box_tag "custom_field_ids[]", field.id, false %>
-                      </td>
+        <!-- 2. Discussion -->
+        <div class="tab-pane fade"
+             id="discussion"
+             role="tabpanel">
 
-                      <td><%= field.title %></td>
+          <h4>Discussion</h4>
+          <p class="text-muted">
+            Discussion feature will be available soon.
+          </p>
 
-                      <td>
-                        <span class="badge bg-secondary">
-                          <%= field.field_type %>
-                        </span>
-                      </td>
+        </div>
 
-                      <td><%= field.description.presence || "-" %></td>
+        <!-- 3. General Settings -->
+        <div class="tab-pane fade"
+             id="settings"
+             role="tabpanel">
 
-                      <td><%= field.show_in_table ? "Yes" : "No" %></td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-          <% end %>
+          <%= render "settings_tab" %>
 
-        <% else %>
-          <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-              <thead class="table-light">
-                <tr>
-                  <th>Field Title</th>
-                  <th>Field Type</th>
-                  <th>Description</th>
-                  <th>Show in Table</th>
-                </tr>
-              </thead>
+        </div>
 
-              <tbody>
-                <% @inventory.custom_fields.order(:position).each do |field| %>
-                  <tr>
-                    <td><%= field.title %></td>
-                    <td><%= field.field_type %></td>
-                    <td><%= field.description.presence || "-" %></td>
-                    <td><%= field.show_in_table ? "Yes" : "No" %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
+        <!-- 4. Custom ID -->
+        <div class="tab-pane fade"
+             id="custom-id"
+             role="tabpanel">
+
+          <%= render "custom_id_tab" %>
+
+        </div>
+
+        <!-- 5. Access -->
+        <% if can_manage %>
+          <div class="tab-pane fade"
+               id="access"
+               role="tabpanel">
+
+            <%= render "access_tab" %>
+
           </div>
         <% end %>
 
-      <% else %>
-        <p class="text-muted">No custom fields added yet.</p>
-      <% end %>
-            <% if @inventory.is_public? ||
-            (user_signed_in? && (current_user.admin? || @inventory.user_id == current_user.id)) %>
+        <!-- 6. Custom Fields -->
+        <div class="tab-pane fade"
+             id="custom-fields"
+             role="tabpanel">
 
-        <%= link_to "View Items",
-            inventory_items_path(@inventory),
-            class: "btn btn-primary mt-3 mb-3" %>
+          <%= render "custom_fields_tab" %>
 
-      <% end %>
-      <hr>
+        </div>
+
+        <!-- 7. Statistics -->
+        <div class="tab-pane fade"
+             id="statistics"
+             role="tabpanel">
+
+          <h4>Statistics</h4>
+          <p class="text-muted">
+            Inventory statistics and aggregations will be available soon.
+          </p>
+
+        </div>
+
+      </div>
+
+      <hr class="mt-4">
 
       <p class="mb-1">
         <strong>Owner:</strong>
         <%= @inventory.user.username %>
       </p>
 
-      <p class="text-muted">
+      <p class="text-muted mb-0">
         <strong>Created:</strong>
         <%= l(@inventory.created_at, format: :long) %>
       </p>
+
     </div>
   </div>
 </div>
+
+<script>
+function activateInventoryTabFromHash() {
+  const hash = window.location.hash;
+
+  if (!hash || !window.bootstrap) return;
+
+  const tabButton = document.querySelector(
+    `#inventoryTabs [data-bs-target="${hash}"]`
+  );
+
+  if (tabButton) {
+    bootstrap.Tab.getOrCreateInstance(tabButton).show();
+  }
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  activateInventoryTabFromHash
+);
+
+document.addEventListener(
+  "turbo:load",
+  activateInventoryTabFromHash
+);
+</script>

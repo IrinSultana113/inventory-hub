@@ -1,0 +1,56 @@
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <% if selectable %>
+          <th>Select</th>
+        <% end %>
+
+        <th>Custom ID</th>
+        <th>Created By</th>
+        <th>Created At</th>
+
+        <% @custom_fields.each do |field| %>
+          <th><%= field.title %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <% if selectable %>
+            <td>
+              <%= check_box_tag "item_ids[]", item.id, false %>
+            </td>
+          <% end %>
+
+          <td>
+            <%= link_to item.custom_id.presence || "Not generated",
+                inventory_item_path(@inventory, item) %>
+          </td>
+
+          <td><%= item.user.username %></td>
+          <td><%= l(item.created_at, format: :short) %></td>
+
+          <% @custom_fields.each do |field| %>
+            <% field_value = item.custom_field_values.find {
+              |value| value.custom_field_id == field.id
+            } %>
+
+            <td>
+              <% if field_value %>
+                <%= field.field_type == "boolean" ?
+                    (field_value.value == "true" ? "Yes" : "No") :
+                    field_value.value.presence || "—" %>
+              <% else %>
+                —
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

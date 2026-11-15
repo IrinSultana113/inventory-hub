@@ -3,7 +3,7 @@
     <div class="card-body p-4">
       <h4>Edit Custom Field</h4>
 
-      <%= form_with model: [@inventory, @custom_field] do |form| %>
+      <%= form_with model: [@inventory, @custom_field], data: { turbo: false }  do |form| %>
         <div class="mb-3">
           <%= form.label :title, "Field Title" %>
           <%= form.text_field :title, class: "form-control", required: true %>
@@ -29,7 +29,7 @@
 
         <%= form.submit "Save Changes", class: "btn btn-success" %>
 
-        <%= link_to "Cancel", @inventory,
+        <%= link_to "Cancel", inventory_path(@inventory, anchor: "custom-fields"),
             class: "btn btn-outline-secondary" %>
       <% end %>
     </div>

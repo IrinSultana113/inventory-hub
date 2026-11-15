@@ -1,0 +1,92 @@
+
+<div class="mb-3">
+  <h4>Custom Fields</h4>
+  <p class="text-muted">
+    Define the fields that describe each item in this inventory.
+  </p>
+</div>
+
+<% can_manage = user_signed_in? &&
+    (current_user.admin? || @inventory.user_id == current_user.id) %>
+
+<% if can_manage %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="mb-3">Add Custom Field</h5>
+
+      <%= form_with model: [@inventory, @custom_field],
+          data: { turbo: false } do |form| %>
+        <div class="mb-3">
+          <%= form.label :title, "Field Title", class: "form-label" %>
+          <%= form.text_field :title,
+              class: "form-control",
+              placeholder: "e.g. Brand",
+              required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :field_type, "Field Type",
+              class: "form-label" %>
+
+          <%= form.select :field_type,
+              CustomField::FIELD_TYPES.map { |type| [type.titleize, type] },
+              { prompt: "Select field type" },
+              class: "form-select",
+              required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :description, class: "form-label" %>
+          <%= form.text_area :description,
+              class: "form-control",
+              rows: 2,
+              placeholder: "Explain what this field is for" %>
+        </div>
+
+        <div class="form-check mb-3">
+          <%= form.check_box :show_in_table,
+              class: "form-check-input" %>
+
+          <%= form.label :show_in_table,
+              "Show this field in items table",
+              class: "form-check-label" %>
+        </div>
+
+        <%= form.submit "Add Custom Field",
+            class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @inventory.custom_fields.any? %>
+
+  <% if can_manage %>
+    <%= form_with url: manage_inventory_custom_fields_path(@inventory),
+      method: :post,
+      data: { turbo: false } do |form| %>
+
+    <div class="mb-3">
+      <%= button_tag "Edit Selected",
+        type: "submit",
+        name: "action_type",
+        value: "edit",
+        class: "btn btn-warning me-2" %>
+
+      <%= button_tag "Delete Selected",
+        type: "submit",
+        name: "action_type",
+        value: "delete",
+        class: "btn btn-danger",
+        data: { turbo_confirm: "Delete selected custom fields?" } %>
+    </div>
+
+    <%= render "custom_fields_table", selectable: true %>
+  <% end %>
+  <% else %>
+    <%= render "custom_fields_table", selectable: false %>
+  <% end %>
+
+<% else %>
+  <p class="text-muted">No custom fields added yet.</p>
+<% end %>

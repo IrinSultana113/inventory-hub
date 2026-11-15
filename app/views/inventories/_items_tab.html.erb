@@ -1,0 +1,41 @@
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h4>Inventory Items</h4>
+    <p class="text-muted mb-0">View and manage inventory items.</p>
+  </div>
+
+  <% if @inventory.can_write_items?(current_user) %>
+    <%= link_to "Add New Item",
+        new_inventory_item_path(@inventory),
+        class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<% if @inventory.can_write_items?(current_user) %>
+  <%= form_with url: bulk_destroy_inventory_items_path(@inventory),
+      method: :delete do %>
+
+    <div class="mb-3">
+      <%= button_tag "Edit Selected",
+          type: "submit",
+          name: "action_type",
+          value: "edit",
+          formaction: manage_inventory_items_path(@inventory),
+          formmethod: "post",
+          class: "btn btn-warning me-2" %>
+
+      <%= submit_tag "Delete Selected",
+          class: "btn btn-danger",
+          data: { turbo_confirm: "Delete selected items?" } %>
+    </div>
+
+    <%= render "items_table", selectable: true %>
+  <% end %>
+<% else %>
+  <%= render "items_table", selectable: false %>
+<% end %>
+
+<% if @items.empty? %>
+  <p class="text-muted text-center mt-4">No items found.</p>
+<% end %>

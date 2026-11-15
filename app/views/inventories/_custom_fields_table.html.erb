@@ -1,0 +1,33 @@
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <% if selectable %>
+          <th>Select</th>
+        <% end %>
+        <th>Field Title</th>
+        <th>Field Type</th>
+        <th>Description</th>
+        <th>Show in Table</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @inventory.custom_fields.order(:position).each do |field| %>
+        <tr>
+          <% if selectable %>
+            <td>
+              <%= check_box_tag "custom_field_ids[]", field.id, false %>
+            </td>
+          <% end %>
+
+          <td><%= field.title %></td>
+          <td><%= field.field_type.titleize %></td>
+          <td><%= field.description.presence || "—" %></td>
+          <td><%= field.show_in_table? ? "Yes" : "No" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
