@@ -1,6 +1,6 @@
 
 Rails.application.routes.draw do
-  get "dashboard/index"
+  #get "dashboard/index"
   get "home/index"
 
   devise_for :users
@@ -30,6 +30,13 @@ Rails.application.routes.draw do
       end
     end
     resources :inventory_accesses, only: %i[create destroy]
+  end
+  namespace :admin do
+    resources :users, only: [:index] do
+      collection do
+        post :manage
+      end
+    end
   end
   get "dashboard", to: "dashboard#index"
   get "up" => "rails/health#show", as: :rails_health_check

@@ -1,0 +1,124 @@
+
+<div class="container mt-4">
+  <div class="mb-4">
+    <h2>Admin Panel</h2>
+    <p class="text-muted">Manage registered users</p>
+  </div>
+
+  <%= form_with url: manage_admin_users_path,
+                method: :post,
+                local: true do %>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center gap-3">
+
+          <strong>Selected Users Actions:</strong>
+
+          <%= select_tag :bulk_action,
+              options_for_select([
+                ["Choose action", ""],
+                ["Block", "block"],
+                ["Unblock", "unblock"],
+                ["Make Admin", "promote"],
+                ["Remove Admin", "demote"],
+                ["Delete", "delete"]
+              ]),
+              class: "form-select",
+              style: "width: 190px;",
+              required: true %>
+
+          <%= submit_tag "Apply",
+              class: "btn btn-primary",
+              data: {
+                turbo_confirm: "Are you sure you want to apply this action?"
+              } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <strong>Users (<%= @users.count %>)</strong>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>
+                <input type="checkbox"
+                       id="selectAllUsers"
+                       class="form-check-input">
+              </th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td>
+                  <%= check_box_tag "user_ids[]",
+                      user.id,
+                      false,
+                      class: "form-check-input user-checkbox" %>
+                </td>
+
+                <td><%= user.username %></td>
+                <td><%= user.email %></td>
+
+                <td>
+                  <% if user.admin? %>
+                    <span class="badge bg-primary">Admin</span>
+                  <% else %>
+                    <span class="badge bg-secondary">User</span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <% if user.blocked? %>
+                    <span class="badge bg-danger">Blocked</span>
+                  <% else %>
+                    <span class="badge bg-success">Active</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener("turbo:load", setupUserSelection);
+  document.addEventListener("DOMContentLoaded", setupUserSelection);
+
+  function setupUserSelection() {
+    const selectAll = document.getElementById("selectAllUsers");
+    const checkboxes = document.querySelectorAll(".user-checkbox");
+
+    if (!selectAll) return;
+
+    selectAll.onchange = function () {
+      checkboxes.forEach(function (checkbox) {
+        checkbox.checked = selectAll.checked;
+      });
+    };
+
+    checkboxes.forEach(function (checkbox) {
+      checkbox.onchange = function () {
+        selectAll.checked =
+          Array.from(checkboxes).every(function (item) {
+            return item.checked;
+          });
+      };
+    });
+  }
+</script>
