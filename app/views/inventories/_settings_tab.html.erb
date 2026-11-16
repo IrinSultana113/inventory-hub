@@ -1,8 +1,8 @@
 
 <div class="mb-3">
-  <h4>General Settings</h4>
+  <h4><%= t("inventories.settings.title") %></h4>
   <p class="text-muted">
-    Manage your inventory title, description, category and visibility.
+    <%= t("inventories.settings.subtitle") %>
   </p>
 </div>
 
@@ -21,18 +21,21 @@
     <% end %>
 
     <div class="mb-3">
-      <%= form.label :title, class: "form-label" %>
+      <%= form.label :title, t("inventories.settings.title_label"),
+          class: "form-label" %>
       <%= form.text_field :title, class: "form-control", required: true %>
     </div>
 
     <div class="mb-3">
-      <%= form.label :description, class: "form-label" %>
+      <%= form.label :description, t("inventories.settings.description"),
+          class: "form-label" %>
       <%= form.text_area :description,
           rows: 4, class: "form-control" %>
     </div>
 
     <div class="mb-3">
-      <%= form.label :category, class: "form-label" %>
+      <%= form.label :category, t("inventories.settings.category"),
+          class: "form-label" %>
       <%= form.text_field :category,
           class: "form-control", required: true %>
     </div>
@@ -41,16 +44,16 @@
       <%= form.check_box :is_public, class: "form-check-input" %>
 
       <%= form.label :is_public,
-          "Make this inventory public",
+          t("inventories.settings.make_public"),
           class: "form-check-label" %>
 
       <div class="form-text">
-        Public inventories allow all logged-in users to create,
-        edit and delete items.
+        <%= t("inventories.settings.public_help") %>
       </div>
     </div>
 
-    <%= form.submit "Save Settings", class: "btn btn-primary" %>
+    <%= form.submit t("inventories.settings.save"),
+        class: "btn btn-primary" %>
 
   <% end %>
 
@@ -58,22 +61,31 @@
 
   <div class="card">
     <div class="card-body">
-      <p><strong>Title:</strong> <%= @inventory.title %></p>
-
       <p>
-        <strong>Description:</strong>
-        <%= @inventory.description.presence || "No description provided." %>
+        <strong><%= t("inventories.settings.title_label") %>:</strong>
+        <%= @inventory.title %>
       </p>
 
-      <p><strong>Category:</strong> <%= @inventory.category %></p>
+      <p>
+        <strong><%= t("inventories.settings.description") %>:</strong>
+        <%= @inventory.description.presence ||
+            t("inventories.settings.no_description") %>
+      </p>
 
       <p>
-        <strong>Visibility:</strong>
-        <%= @inventory.is_public? ? "Public" : "Private" %>
+        <strong><%= t("inventories.settings.category") %>:</strong>
+        <%= @inventory.category %>
+      </p>
+
+      <p>
+        <strong><%= t("inventories.settings.visibility") %>:</strong>
+        <%= @inventory.is_public? ?
+            t("inventories.settings.public") :
+            t("inventories.settings.private") %>
       </p>
 
       <p class="text-muted mb-0">
-        Only the inventory owner or an admin can change these settings.
+        <%= t("inventories.settings.permission_help") %>
       </p>
     </div>
   </div>

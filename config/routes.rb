@@ -1,5 +1,6 @@
 
 Rails.application.routes.draw do
+  resource :preferences, only: [:update]
   #get "dashboard/index"
   get "home/index"
 

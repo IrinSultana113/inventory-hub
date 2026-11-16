@@ -25,7 +25,7 @@ export default class extends Controller {
     this.listTarget.querySelectorAll("[data-id-element]").length
 
       if (currentCount >= 10) {
-        alert("You can add a maximum of 10 elements.")
+        alert(this.element.dataset.maxElementsMessage)
       return
       }
     const type = event.currentTarget.dataset.type
@@ -49,7 +49,7 @@ export default class extends Controller {
     const formatInput = element.querySelector("[data-format-input]")
 
     if (type === "fixed_text") {
-      valueInput.value = "ITEM-"
+      valueInput.value = this.element.dataset.fixedTextDefault
     }
 
     const formats = {
@@ -227,29 +227,18 @@ export default class extends Controller {
 
     if (hasInvalidFormat) {
       this.previewTarget.textContent =
-        "Invalid number format! Use D4, D6 or X5."
+        this.element.dataset.invalidFormatMessage
       return
     }
 
     this.previewTarget.textContent =
-     preview || "Add elements to preview your ID"
+     preview || this.element.dataset.emptyPreviewMessage
     }
 
   elementName(type) {
-    const names = {
-      fixed_text: "Fixed Text",
-      sequence: "Sequence",
-      random_20bit: "20-bit Random",
-      random_32bit: "32-bit Random",
-      random_6_digit: "6-digit Random",
-      random_9_digit: "9-digit Random",
-      guid: "GUID",
-      date: "Date",
-      time: "Time"
+    const names = JSON.parse(this.element.dataset.elementNames)
+    return names[type] || type
     }
-
-    return names[type]
-  }
 
 
   isValidNumberFormat(format) {

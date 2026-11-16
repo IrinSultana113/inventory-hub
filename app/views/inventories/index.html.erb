@@ -1,9 +1,9 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>All Inventories</h2>
+    <h2><%= t("inventories.index.title") %></h2>
 
     <% if user_signed_in? %>
-      <%= link_to "Create Inventory", new_inventory_path,
+      <%= link_to t("inventories.index.create_inventory"), new_inventory_path,
           class: "btn btn-primary" %>
     <% end %>
   </div>
@@ -19,17 +19,17 @@
             <%= check_box_tag "select_all", "1", false,
                 id: "select-all",
                 class: "form-check-input" %>
-            <%= label_tag "select-all", "Select all",
+            <%= label_tag "select-all", t("inventories.index.select_all"),
                 class: "form-check-label" %>
           </div>
           <button type="button"
                 id="edit-selected"
                 class="btn btn-outline-primary btn-sm"
-                disabled>Edit Selected
+                disabled><%= t("inventories.index.edit_selected") %>
           </button>
-          <%= submit_tag "Delete Selected",
+          <%= submit_tag t("inventories.index.delete_selected"),
               class: "btn btn-danger btn-sm",
-              data: { turbo_confirm: "Delete selected inventories?" }
+              data: { turbo_confirm: t("inventories.index.confirm_delete") }
                %>
         </div>
       <% end %>
@@ -39,12 +39,12 @@
           <thead class="table-light">
             <tr>
               <% if user_signed_in? %>
-                <th>Select</th>
+                <th><%= t("inventories.index.select") %></th>
               <% end %>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Owner</th>
-              <th>Created At</th>
+              <th><%= t("inventories.index.title_column") %></th>
+              <th><%= t("inventories.index.category") %></th>
+              <th><%= t("inventories.index.owner") %></th>
+              <th><%= t("inventories.index.created_at") %></th>
             </tr>
           </thead>
 
@@ -75,7 +75,7 @@
     <% end %>
   <% else %>
     <div class="alert alert-info">
-      No inventories found.
+      <%= t("inventories.index.empty_message") %>
     </div>
   <% end %>
 </div>

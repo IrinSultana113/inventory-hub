@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>"
+      data-bs-theme="<%= user_signed_in? ? current_user.theme : 'light' %>">
   <head>
     <title><%= content_for(:title) || "Inventory Hub" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,7 +20,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-light">
+  <body class="min-vh-100">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
@@ -37,42 +38,79 @@
 
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <%= link_to "Home", root_path, class: "nav-link" %>
+              <%= link_to t("navigation.home"), root_path, class: "nav-link" %>
             </li>
 
             <li class="nav-item">
-              <%= link_to "Dashboard", dashboard_path, class: "nav-link" if user_signed_in? %>
+              <%= link_to t("navigation.dashboard"), dashboard_path, class: "nav-link" if user_signed_in? %>
             </li>
 
             <li class="nav-item">
-              <%= link_to "Inventories", inventories_path, class: "nav-link" %>
+              <%= link_to t("navigation.inventories"), inventories_path, class: "nav-link" %>
             </li>
+
             <% if user_signed_in? && current_user.admin? %>
               <li class="nav-item">
-                <%= link_to "Admin Panel", admin_users_path, class: "nav-link" %>
+                <%= link_to t("navigation.admin_panel"), admin_users_path, class: "nav-link" %>
               </li>
             <% end %>
           </ul>
 
-          <div class="d-flex align-items-center gap-2">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+
             <% if user_signed_in? %>
+
+              <%= form_with url: preferences_path, method: :patch, local: true do |f| %>
+                <%= f.select :locale,
+                    [
+                      [t("navigation.english"), "en"],
+                      [t("navigation.german"), "de"]
+                    ],
+                    { selected: current_user.locale },
+                    {
+                      class: "form-select form-select-sm",
+                      aria: { label: t("navigation.language") },
+                      onchange: "this.form.requestSubmit()"
+                    } %>
+              <% end %>
+
+              <%= form_with url: preferences_path, method: :patch, local: true,
+                      id: "theme-preference-form" do |f| %>
+                <%= f.select :theme,
+                    [
+                      [t("navigation.light"), "light"],
+                      [t("navigation.dark"), "dark"]
+                    ],
+                    { selected: current_user.theme },
+                    {
+                      class: "form-select form-select-sm",
+                      aria: { label: t("navigation.theme") },
+                      onchange: "this.form.requestSubmit()"
+                    } %>
+              <% end %>
+
               <span class="text-white">
-                Welcome, <%= current_user.username %>
+                <%= t("navigation.welcome") %>,
+                <%= current_user.username %>
               </span>
 
-              <%= button_to "Logout",
+              <%= button_to t("navigation.logout"),
                   destroy_user_session_path,
                   method: :delete,
                   class: "btn btn-outline-light btn-sm" %>
+
             <% else %>
-              <%= link_to "Sign in",
+
+              <%= link_to t("navigation.sign_in"),
                   new_user_session_path,
                   class: "btn btn-outline-light btn-sm" %>
 
-              <%= link_to "Sign up",
+              <%= link_to t("navigation.sign_up"),
                   new_user_registration_path,
                   class: "btn btn-primary btn-sm" %>
+
             <% end %>
+
           </div>
 
         </div>
@@ -99,6 +137,46 @@
       <%= yield %>
 
     </main>
+
+
+<script>
+  document.addEventListener("submit", async function(event) {
+    const form = event.target;
+
+    if (form.id !== "theme-preference-form") return;
+
+    event.preventDefault();
+
+    const selectedTheme = form.querySelector('[name="theme"]').value;
+    const previousTheme = document.documentElement.getAttribute("data-bs-theme");
+
+    // Immediately change the theme
+    document.documentElement.setAttribute("data-bs-theme", selectedTheme);
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+        "X-CSRF-Token": csrfToken
+        },
+        credentials: "same-origin"
+      });
+
+      if (!response.ok) {
+        throw new Error("Theme update failed");
+      }
+    } catch (error) {
+      document.documentElement.setAttribute("data-bs-theme", previousTheme);
+
+      console.error("Theme save error:", error);
+
+      alert("Theme save failed: " + error.message);
+}
+  });
+</script>
 
   </body>
 </html>

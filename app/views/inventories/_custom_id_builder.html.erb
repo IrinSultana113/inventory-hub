@@ -1,83 +1,70 @@
 
-<div data-controller="custom-id-builder">
+<% element_types = %w[
+  fixed_text sequence random_20bit random_32bit
+  random_6_digit random_9_digit guid date time
+] %>
 
-  <h5 class="mb-3">Custom ID Format</h5>
+<% element_names = element_types.index_with do |type|
+     t("inventories.custom_id_builder.elements.#{type}.name")
+   end %>
+
+<div data-controller="custom-id-builder"
+     data-element-names="<%= element_names.to_json %>"
+     data-max-elements-message="<%= t('inventories.custom_id_builder.max_elements_message') %>"
+     data-invalid-format-message="<%= t('inventories.custom_id_builder.invalid_format_message') %>"
+     data-empty-preview-message="<%= t('inventories.custom_id_builder.empty_preview') %>"
+     data-fixed-text-default="<%= t('inventories.custom_id_builder.fixed_text_default') %>">
+
+  <h5 class="mb-3">
+    <%= t("inventories.custom_id_builder.title") %>
+  </h5>
 
   <div class="mb-3">
-    <label class="form-label">Add ID Element</label>
+    <label class="form-label">
+      <%= t("inventories.custom_id_builder.add_element") %>
+    </label>
 
-    <% elements = [
-      ["fixed_text", "Fixed Text",
-       "Adds your own fixed text to the Custom ID. You can use letters, numbers, spaces and Unicode characters.",
-       "BOOK- → BOOK-0001"],
-
-      ["sequence", "Sequence",
-       "Automatically generates the next number for each new item. D4 means 4 digits, D6 means 6 digits. X means hexadecimal.",
-       "D4 → 0001, D6 → 000001, X5 → 000FF"],
-
-      ["random_20bit", "20-bit Random",
-       "Generates a random 20-bit number. You can choose decimal (D) or hexadecimal (X) formatting.",
-       "D7 → 0123456, X5 → 0ABCD"],
-
-      ["random_32bit", "32-bit Random",
-       "Generates a random 32-bit number. Supports decimal and hexadecimal formats.",
-       "D10 → 1234567890, X8 → 00ABCDEF"],
-
-      ["random_6_digit", "6-digit Random",
-       "Generates a random number using the 6-digit random element. You can customize its number format.",
-       "D6 → 123456"],
-
-      ["random_9_digit", "9-digit Random",
-       "Generates a random number using the 9-digit random element. You can customize its number format.",
-       "D9 → 123456789"],
-
-      ["guid", "GUID",
-       "Generates a globally unique identifier containing letters, numbers and hyphens.",
-       "550e8400-e29b-41d4-a716-446655440000"],
-
-      ["date", "Date",
-       "Adds the current date when an item is created. The format is YYYYMMDD.",
-       "20261112"],
-
-      ["time", "Time",
-       "Adds the current time when an item is created. The format is HHMMSS.",
-       "143025"]
+    <% elements = %w[
+      fixed_text sequence random_20bit random_32bit
+      random_6_digit random_9_digit guid date time
     ] %>
 
     <div class="d-flex flex-wrap gap-2">
-      <% elements.each do |type, label, help, example| %>
-
+      <% elements.each do |type| %>
         <div class="d-inline-flex align-items-center gap-1">
           <button type="button"
                   class="btn btn-outline-primary btn-sm"
                   data-action="click->custom-id-builder#add"
                   data-type="<%= type %>">
-            + <%= label %>
+            + <%= t("inventories.custom_id_builder.elements.#{type}.name") %>
           </button>
 
           <details class="position-relative">
             <summary class="text-primary"
                      style="cursor:pointer; list-style:none;"
-                     title="Learn about <%= label %>">
+                     title="<%= t('inventories.custom_id_builder.learn_about') %>">
               ⓘ
             </summary>
 
             <div class="card shadow p-3 position-absolute"
                  style="z-index: 10; width: 280px; left: 0; top: 25px;">
-              <strong><%= label %></strong>
+              <strong>
+                <%= t("inventories.custom_id_builder.elements.#{type}.name") %>
+              </strong>
 
               <p class="small mt-2 mb-2">
-                <%= help %>
+                <%= t("inventories.custom_id_builder.elements.#{type}.help") %>
               </p>
 
               <div class="small text-muted">
-                <strong>Example:</strong>
-                <%= example %>
+                <strong>
+                  <%= t("inventories.custom_id_builder.example") %>:
+                </strong>
+                <%= t("inventories.custom_id_builder.elements.#{type}.example") %>
               </div>
             </div>
           </details>
         </div>
-
       <% end %>
     </div>
   </div>
@@ -95,13 +82,13 @@
 
         <div class="d-flex justify-content-between align-items-center mb-2">
           <strong data-element-type>
-            <%= element["type"].humanize %>
+            <%= t("inventories.custom_id_builder.elements.#{element['type']}.name") %>
           </strong>
 
           <button type="button"
                   class="btn btn-outline-danger btn-sm"
                   data-action="click->custom-id-builder#remove">
-            Remove
+            <%= t("inventories.custom_id_builder.remove") %>
           </button>
         </div>
 
@@ -112,7 +99,9 @@
 
         <% if element["type"] == "fixed_text" %>
           <div data-fixed-text-input>
-            <label class="form-label">Text</label>
+            <label class="form-label">
+              <%= t("inventories.custom_id_builder.text") %>
+            </label>
 
             <input type="text"
                    name="inventory[custom_id_format][][value]"
@@ -127,7 +116,9 @@
                "random_6_digit", "random_9_digit"].include?(element["type"]) %>
 
           <div data-number-format-input>
-            <label class="form-label">Number Format</label>
+            <label class="form-label">
+              <%= t("inventories.custom_id_builder.number_format") %>
+            </label>
 
             <input type="text"
                    name="inventory[custom_id_format][][format]"
@@ -156,7 +147,7 @@
         <button type="button"
                 class="btn btn-outline-danger btn-sm"
                 data-action="click->custom-id-builder#remove">
-          Remove
+          <%= t("inventories.custom_id_builder.remove") %>
         </button>
       </div>
 
@@ -165,7 +156,9 @@
              data-type-input>
 
       <div data-fixed-text-input>
-        <label class="form-label">Text</label>
+        <label class="form-label">
+          <%= t("inventories.custom_id_builder.text") %>
+        </label>
 
         <input type="text"
                name="inventory[custom_id_format][][value]"
@@ -175,7 +168,9 @@
       </div>
 
       <div data-number-format-input>
-        <label class="form-label">Number Format</label>
+        <label class="form-label">
+          <%= t("inventories.custom_id_builder.number_format") %>
+        </label>
 
         <input type="text"
                name="inventory[custom_id_format][][format]"
@@ -189,7 +184,9 @@
   </template>
 
   <div class="alert alert-info">
-    <strong>Example Preview:</strong>
+    <strong>
+      <%= t("inventories.custom_id_builder.preview_title") %>
+    </strong>
 
     <div data-custom-id-builder-target="preview"
          class="fw-bold fs-5 mt-2">

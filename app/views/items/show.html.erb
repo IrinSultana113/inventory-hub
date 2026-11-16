@@ -2,33 +2,34 @@
 <div class="container mt-4">
   <div class="card shadow-sm">
     <div class="card-body p-4">
-      <h3 class="mb-3">Item Details</h3>
+      <h3 class="mb-3"><%= t("items.show.title") %></h3>
 
       <p>
-        <strong>Custom ID:</strong>
-        <%= @item.custom_id.presence || "Not generated yet" %>
+        <strong><%= t("items.show.custom_id") %>:</strong>
+        <%= @item.custom_id.presence || t("items.show.not_generated") %>
       </p>
 
       <p>
-        <strong>Created By:</strong>
+        <strong><%= t("items.show.created_by") %>:</strong>
         <%= @item.user.username %>
       </p>
 
       <p>
-        <strong>Created At:</strong>
+        <strong><%= t("items.show.created_at") %>:</strong>
         <%= l(@item.created_at, format: :long) %>
       </p>
 
       <hr>
 
-      <h5>Custom Fields</h5>
+      <h5><%= t("items.show.custom_fields") %></h5>
 
       <% @custom_field_values.each do |field_value| %>
         <div class="mb-3">
           <strong><%= field_value.custom_field.title %>:</strong>
 
           <% if field_value.custom_field.field_type == "boolean" %>
-            <%= field_value.value == "true" ? "Yes" : "No" %>
+            <%= field_value.value == "true" ?
+                t("items.show.yes") : t("items.show.no") %>
           <% elsif field_value.custom_field.field_type == "link" && field_value.value.present? %>
             <%= link_to field_value.value, field_value.value,
                 target: "_blank", rel: "noopener" %>
@@ -38,7 +39,7 @@
         </div>
       <% end %>
 
-      <%= link_to "Back to Items",
+      <%= link_to t("items.show.back_to_items"),
           inventory_items_path(@inventory),
           class: "btn btn-outline-secondary" %>
     </div>

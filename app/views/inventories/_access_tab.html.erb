@@ -1,14 +1,14 @@
 
 <div class="mb-3">
-  <h4>Manage Access</h4>
+  <h4><%= t("inventories.access.title") %></h4>
   <p class="text-muted">
-    Give specific users permission to add, edit and delete items.
+    <%= t("inventories.access.subtitle") %>
   </p>
 </div>
 
 <div class="card mb-4">
   <div class="card-body">
-    <h5 class="mb-3">Add User</h5>
+    <h5 class="mb-3"><%= t("inventories.access.add_user") %></h5>
 
     <%= form_with url: inventory_inventory_accesses_path(@inventory),
       method: :post,
@@ -17,15 +17,18 @@
 
       <div class="mb-3">
         <label for="access-user-search" class="form-label">
-          Search by username or email
+          <%= t("inventories.access.search_label") %>
         </label>
 
         <input type="text"
                id="access-user-search"
                class="form-control"
-               placeholder="Type username or email..."
+               placeholder="<%= t('inventories.access.search_placeholder') %>"
                autocomplete="off"
-               data-search-url="<%= user_search_inventory_path(@inventory) %>">
+               data-search-url="<%= user_search_inventory_path(@inventory) %>"
+               data-selected-prefix="<%= t('inventories.access.selected') %>"
+               data-no-results="<%= t('inventories.access.no_results') %>"
+               data-select-user-message="<%= t('inventories.access.select_user_message') %>">
 
         <input type="hidden" name="user_id" id="access-user-id">
 
@@ -40,21 +43,21 @@
               id="add-access-button"
               class="btn btn-primary"
               disabled>
-        Grant Access
+        <%= t("inventories.access.grant_access") %>
       </button>
     <% end %>
   </div>
 </div>
 
-<h5 class="mb-3">Users with Access</h5>
+<h5 class="mb-3"><%= t("inventories.access.users_with_access") %></h5>
 
 <div class="mb-3">
-  Sort by:
-  <%= link_to "Username",
+  <%= t("inventories.access.sort_by") %>
+  <%= link_to t("inventories.access.username"),
       inventory_path(@inventory, sort: "username", anchor: "access"),
       class: "btn btn-sm btn-outline-secondary" %>
 
-  <%= link_to "Email",
+  <%= link_to t("inventories.access.email"),
       inventory_path(@inventory, sort: "email", anchor: "access"),
       class: "btn btn-sm btn-outline-secondary" %>
 </div>
@@ -64,9 +67,9 @@
     <table class="table table-bordered table-hover">
       <thead class="table-light">
         <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Action</th>
+          <th><%= t("inventories.access.username") %></th>
+          <th><%= t("inventories.access.email") %></th>
+          <th><%= t("inventories.access.action") %></th>
         </tr>
       </thead>
 
@@ -76,11 +79,14 @@
             <td><%= access.user.username %></td>
             <td><%= access.user.email %></td>
             <td>
-              <%= button_to "Remove Access",
+              <%= button_to t("inventories.access.remove_access"),
                   inventory_inventory_access_path(@inventory, access),
                   method: :delete,
                   class: "btn btn-sm btn-danger",
-                  data: { turbo: false, confirm: "Remove this user's access?" } %>
+                  data: {
+                    turbo: false,
+                    confirm: t("inventories.access.remove_confirmation")
+                  } %>
             </td>
           </tr>
         <% end %>
@@ -88,7 +94,9 @@
     </table>
   </div>
 <% else %>
-  <p class="text-muted">No users have been given access yet.</p>
+  <p class="text-muted">
+    <%= t("inventories.access.no_users") %>
+  </p>
 <% end %>
 
 <script>
@@ -137,7 +145,8 @@
             option.addEventListener("click", () => {
               userIdInput.value = user.id;
               searchInput.value = user.username;
-              selectedUser.textContent = `Selected: ${user.username}`;
+              selectedUser.textContent =
+                `${searchInput.dataset.selectedPrefix}: ${user.username}`;
               addButton.disabled = false;
               resultsBox.replaceChildren();
             });
@@ -148,7 +157,7 @@
           if (users.length === 0) {
             const empty = document.createElement("div");
             empty.className = "list-group-item text-muted";
-            empty.textContent = "No matching users found.";
+            empty.textContent = searchInput.dataset.noResults;
             resultsBox.appendChild(empty);
           }
         } catch (error) {
@@ -160,7 +169,7 @@
     form.addEventListener("submit", (event) => {
       if (!userIdInput.value) {
         event.preventDefault();
-        alert("Please select a user from the search results.");
+        alert(searchInput.dataset.selectUserMessage);
       }
     });
   })();

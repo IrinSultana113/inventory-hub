@@ -1,8 +1,8 @@
 
 <div class="mb-3">
-  <h4>Custom ID Format</h4>
+  <h4><%= t("inventories.custom_id.title") %></h4>
   <p class="text-muted">
-    Configure how unique IDs are automatically generated for new items.
+    <%= t("inventories.custom_id.subtitle") %>
   </p>
 </div>
 
@@ -18,7 +18,7 @@
     <%= render "custom_id_builder" %>
 
     <div class="mt-4">
-      <%= form.submit "Save Custom ID Format",
+      <%= form.submit t("inventories.custom_id.save"),
           class: "btn btn-primary" %>
     </div>
   <% end %>
@@ -26,15 +26,17 @@
 <% else %>
 
   <p class="text-muted">
-    You can view the inventory items, but only the inventory owner
-    or an admin can change the Custom ID format.
+    <%= t("inventories.custom_id.permission_message") %>
   </p>
 
-  <h5>Current ID Format</h5>
+  <h5><%= t("inventories.custom_id.current_format") %></h5>
 
   <% @inventory.effective_custom_id_format.each do |element| %>
     <div class="border rounded p-2 mb-2">
-      <strong><%= element["type"].to_s.titleize %></strong>
+      <strong>
+        <%= t("inventories.custom_id.element_types.#{element['type']}",
+            default: element["type"].to_s.titleize) %>
+      </strong>
 
       <% if element["value"].present? %>
         — <%= element["value"] %>

@@ -5,11 +5,11 @@
         <div>
           <h2><%= @inventory.title %></h2>
           <p class="text-muted mb-0">
-            Category: <%= @inventory.category %>
+            <%= t("inventories.show.category") %>: <%= @inventory.category %>
           </p>
         </div>
 
-        <%= link_to "All Inventories",
+        <%= link_to t("inventories.show.all_inventories"),
             inventories_path,
             class: "btn btn-outline-secondary" %>
       </div>
@@ -29,7 +29,7 @@
                   data-bs-toggle="tab"
                   data-bs-target="#items"
                   type="button">
-            Items
+            <%= t("inventories.show.items") %>
           </button>
         </li>
 
@@ -39,7 +39,7 @@
                   data-bs-toggle="tab"
                   data-bs-target="#discussion"
                   type="button">
-            Discussion
+            <%= t("inventories.show.discussion") %>
           </button>
         </li>
 
@@ -49,7 +49,7 @@
                   data-bs-toggle="tab"
                   data-bs-target="#settings"
                   type="button">
-            General Settings
+            <%= t("inventories.show.general_settings") %>
           </button>
         </li>
 
@@ -59,7 +59,7 @@
                   data-bs-toggle="tab"
                   data-bs-target="#custom-id"
                   type="button">
-            Custom ID
+            <%= t("inventories.show.custom_id") %>
           </button>
         </li>
 
@@ -70,7 +70,7 @@
                     data-bs-toggle="tab"
                     data-bs-target="#access"
                     type="button">
-              Access
+              <%= t("inventories.show.access") %>
             </button>
           </li>
         <% end %>
@@ -81,7 +81,7 @@
                   data-bs-toggle="tab"
                   data-bs-target="#custom-fields"
                   type="button">
-            Custom Fields
+            <%= t("inventories.show.custom_fields") %>
           </button>
         </li>
 
@@ -91,7 +91,7 @@
                   data-bs-toggle="tab"
                   data-bs-target="#statistics"
                   type="button">
-            Statistics
+            <%= t("inventories.show.statistics") %>
           </button>
         </li>
 
@@ -113,9 +113,9 @@
              id="discussion"
              role="tabpanel">
 
-          <h4>Discussion</h4>
+          <h4><%= t("inventories.show.discussion") %></h4>
           <p class="text-muted">
-            Discussion feature will be available soon.
+            <%= t("inventories.show.discussion_coming_soon") %>
           </p>
 
         </div>
@@ -163,9 +163,9 @@
              id="statistics"
              role="tabpanel">
 
-          <h4>Statistics</h4>
+          <h4><%= t("inventories.show.statistics") %></h4>
           <p class="text-muted">
-            Inventory statistics and aggregations will be available soon.
+            <%= t("inventories.show.statistics_coming_soon") %>
           </p>
 
         </div>
@@ -175,12 +175,12 @@
       <hr class="mt-4">
 
       <p class="mb-1">
-        <strong>Owner:</strong>
+        <strong><%= t("inventories.show.owner") %>:</strong>
         <%= @inventory.user.username %>
       </p>
 
       <p class="text-muted mb-0">
-        <strong>Created:</strong>
+        <strong><%= t("inventories.show.created") %>:</strong>
         <%= l(@inventory.created_at, format: :long) %>
       </p>
 

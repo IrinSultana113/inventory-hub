@@ -1,35 +1,40 @@
 <div class="container mt-4">
   <div class="card shadow-sm">
     <div class="card-body p-4">
-      <h4>Edit Custom Field</h4>
+      <h4><%= t("custom_fields.edit.title") %></h4>
 
-      <%= form_with model: [@inventory, @custom_field], data: { turbo: false }  do |form| %>
+      <%= form_with model: [@inventory, @custom_field], data: { turbo: false } do |form| %>
         <div class="mb-3">
-          <%= form.label :title, "Field Title" %>
+          <%= form.label :title, t("custom_fields.edit.field_title") %>
           <%= form.text_field :title, class: "form-control", required: true %>
         </div>
 
         <div class="mb-3">
-          <%= form.label :field_type, "Field Type" %>
+          <%= form.label :field_type, t("custom_fields.edit.field_type") %>
           <%= form.select :field_type,
-              CustomField::FIELD_TYPES.map { |type| [type.titleize, type] },
+              CustomField::FIELD_TYPES.map { |type|
+                [t("inventories.custom_fields.field_types.#{type}"), type]
+              },
               {}, class: "form-select" %>
         </div>
 
         <div class="mb-3">
-          <%= form.label :description %>
+          <%= form.label :description, t("custom_fields.edit.description") %>
           <%= form.text_area :description, class: "form-control", rows: 2 %>
         </div>
 
         <div class="form-check mb-3">
           <%= form.check_box :show_in_table, class: "form-check-input" %>
           <%= form.label :show_in_table,
-              "Show in items table", class: "form-check-label" %>
+              t("custom_fields.edit.show_in_table"),
+              class: "form-check-label" %>
         </div>
 
-        <%= form.submit "Save Changes", class: "btn btn-success" %>
+        <%= form.submit t("custom_fields.edit.save"),
+            class: "btn btn-success" %>
 
-        <%= link_to "Cancel", inventory_path(@inventory, anchor: "custom-fields"),
+        <%= link_to t("custom_fields.edit.cancel"),
+            inventory_path(@inventory, anchor: "custom-fields"),
             class: "btn btn-outline-secondary" %>
       <% end %>
     </div>

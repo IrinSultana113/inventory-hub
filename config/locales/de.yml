@@ -1,0 +1,356 @@
+
+de:
+  hello: "Hallo Welt"
+
+  navigation:
+    home: "Startseite"
+    dashboard: "Dashboard"
+    inventories: "Inventare"
+    admin_panel: "Admin-Bereich"
+    welcome: "Willkommen"
+    logout: "Abmelden"
+    sign_in: "Anmelden"
+    sign_up: "Registrieren"
+    language: "Sprache"
+    theme: "Design"
+    english: "English"
+    german: "Deutsch"
+    light: "Hell"
+    dark: "Dunkel"
+
+  time:
+    formats:
+      long: "%d.%m.%Y, %H:%M Uhr"
+      short: "%d.%m.%Y %H:%M"
+
+  date:
+    formats:
+      long: "%d.%m.%Y"
+
+  
+  dashboard:
+    title: "Mein Dashboard"
+    subtitle: "Verwalte deine persönlichen Inventare."
+    my_inventories: "Meine Inventare"
+    create_inventory: "Inventar erstellen"
+    filter_category: "Nach Kategorie filtern"
+    all_categories: "Alle Kategorien"
+    sort_by: "Sortieren nach"
+    newest_first: "Neueste zuerst"
+    title_column: "Titel"
+    direction: "Sortierrichtung"
+    ascending: "Aufsteigend"
+    descending: "Absteigend"
+    apply: "Anwenden"
+    clear: "klar"
+    category: "Kategorie"
+    description: "Beschreibung"
+    created_at: "Erstellt am"
+    empty_message: "Du hast noch keine Inventare erstellt."
+
+  common:
+    "yes": "Ja"
+    "no": "Nein"
+
+  inventories:
+    index:
+      title: "Alle Inventare"
+      create_inventory: "Inventar erstellen"
+      select_all: "Alle auswählen"
+      edit_selected: "Ausgewählte bearbeiten"
+      delete_selected: "Ausgewählte löschen"
+      confirm_delete: "Ausgewählte Inventare löschen?"
+      select: "Auswählen"
+      title_column: "Titel"
+      category: "Kategorie"
+      owner: "Besitzer"
+      created_at: "Erstellt am"
+      empty_message: "Keine Inventare gefunden."
+    
+    show:
+      category: "Kategorie"
+      all_inventories: "Alle Inventare"
+      items: "Artikel"
+      discussion: "Diskussion"
+      general_settings: "Allgemeine Einstellungen"
+      custom_id: "Benutzerdefinierte ID"
+      access: "Zugriff"
+      custom_fields: "Benutzerdefinierte Felder"
+      statistics: "Statistiken"
+      discussion_coming_soon: "Die Diskussionsfunktion wird bald verfügbar sein."
+      statistics_coming_soon: "Inventarstatistiken und Auswertungen werden bald verfügbar sein."
+      owner: "Besitzer"
+      created: "Erstellt"
+
+    items:
+      title: "Inventarartikel"
+      subtitle: "Inventarartikel anzeigen und verwalten."
+      add_new: "Neuen Artikel hinzufügen"
+      edit_selected: "Ausgewählte bearbeiten"
+      delete_selected: "Ausgewählte löschen"
+      confirm_delete: "Ausgewählte Artikel löschen?"
+      empty_message: "Keine Artikel gefunden."
+
+    items_table:
+      select: "Auswählen"
+      custom_id: "Benutzerdefinierte ID"
+      created_by: "Erstellt von"
+      created_at: "Erstellt am"
+      not_generated: "Nicht generiert"
+      "yes": "Ja"
+      "no": "Nein"
+
+    edit:
+      title: "Inventar bearbeiten"
+      title_label: "Titel"
+      description: "Beschreibung"
+      category: "Kategorie"
+      make_public: "Dieses Inventar öffentlich machen"
+      public_help: "In öffentlichen Inventaren können alle angemeldeten Benutzer Artikel erstellen, bearbeiten und löschen."
+      update: "Inventar aktualisieren"
+      cancel: "Abbrechen"
+      
+    new:
+      title: "Neues Inventar erstellen"
+      title_label: "Titel"
+      title_placeholder: "Inventartitel eingeben"
+      description: "Beschreibung"
+      description_placeholder: "Beschreibe dein Inventar"
+      category: "Kategorie"
+      category_placeholder: "z. B. Elektronik, Bücher"
+      make_public: "Dieses Inventar öffentlich machen"
+      public_help: "In öffentlichen Inventaren können alle angemeldeten Benutzer Artikel erstellen, bearbeiten und löschen."
+      create: "Inventar erstellen"
+      cancel: "Abbrechen"
+
+    settings:
+      title: "Allgemeine Einstellungen"
+      subtitle: "Verwalte Titel, Beschreibung, Kategorie und Sichtbarkeit deines Inventars."
+      title_label: "Titel"
+      description: "Beschreibung"
+      category: "Kategorie"
+      make_public: "Dieses Inventar öffentlich machen"
+      public_help: "In öffentlichen Inventaren können alle angemeldeten Benutzer Artikel erstellen, bearbeiten und löschen."
+      save: "Einstellungen speichern"
+      no_description: "Keine Beschreibung vorhanden."
+      visibility: "Sichtbarkeit"
+      public: "Öffentlich"
+      private: "Privat"
+      permission_help: "Nur der Inventarbesitzer oder ein Administrator kann diese Einstellungen ändern."
+
+    custom_fields:
+      title: "Benutzerdefinierte Felder"
+      subtitle: "Lege die Felder fest, die jeden Artikel in diesem Inventar beschreiben."
+      add_title: "Benutzerdefiniertes Feld hinzufügen"
+      field_title: "Feldtitel"
+      title_placeholder: "z. B. Marke"
+      field_type: "Feldtyp"
+      select_type: "Feldtyp auswählen"
+      description: "Beschreibung"
+      description_placeholder: "Erkläre den Zweck dieses Feldes"
+      show_in_table: "Dieses Feld in der Artikeltabelle anzeigen"
+      add_button: "Benutzerdefiniertes Feld hinzufügen"
+      edit_selected: "Ausgewählte bearbeiten"
+      delete_selected: "Ausgewählte löschen"
+      confirm_delete: "Ausgewählte benutzerdefinierte Felder löschen?"
+      empty_message: "Noch keine benutzerdefinierten Felder hinzugefügt."
+      field_types:
+        string: "Einzeiliger Text"
+        text: "Mehrzeiliger Text"
+        number: "Zahl"
+        link: "Dokument-/Bildlink"
+        boolean: "Ja/Nein"
+
+    custom_fields_table:
+      select: "Auswählen"
+      field_title: "Feldtitel"
+      field_type: "Feldtyp"
+      description: "Beschreibung"
+      show_in_table: "In der Tabelle anzeigen"
+
+    custom_id:
+      title: "Format der benutzerdefinierten ID"
+      subtitle: "Lege fest, wie eindeutige IDs automatisch für neue Artikel generiert werden."
+      save: "Benutzerdefiniertes ID-Format speichern"
+      permission_message: "Du kannst die Inventarartikel ansehen, aber nur der Besitzer oder ein Administrator kann das ID-Format ändern."
+      current_format: "Aktuelles ID-Format"
+
+    custom_id_builder:
+      title: "Benutzerdefinierter ID-Format-Generator"
+      add_element: "ID-Element hinzufügen"
+      learn_about: "Mehr über dieses Element erfahren"
+      example: "Beispiel"
+      remove: "Entfernen"
+      text: "Text"
+      number_format: "Zahlenformat"
+      preview_title: "Beispielvorschau"
+      max_elements_message: "Du kannst maximal 10 Elemente hinzufügen."
+      invalid_format_message: "Ungültiges Zahlenformat! Verwende D4, D6 oder X5."
+      empty_preview: "Füge Elemente hinzu, um deine ID-Vorschau zu sehen."
+      fixed_text_default: "ARTIKEL-"
+
+      elements:
+        fixed_text:
+          name: "Fester Text"
+          help: "Fügt deinen eigenen festen Text zur benutzerdefinierten ID hinzu. Du kannst Buchstaben, Zahlen, Leerzeichen und Unicode-Zeichen verwenden."
+          example: "BUCH- → BUCH-0001"
+
+        sequence:
+          name: "Fortlaufende Nummer"
+          help: "Generiert automatisch die nächste Nummer für jeden neuen Artikel. D4 bedeutet 4 Stellen, D6 bedeutet 6 Stellen. X steht für Hexadezimal."
+          example: "D4 → 0001, D6 → 000001, X5 → 000FF"
+
+        random_20bit:
+          name: "20-Bit-Zufallszahl"
+          help: "Generiert eine zufällige 20-Bit-Zahl. Du kannst das Dezimalformat (D) oder Hexadezimalformat (X) wählen."
+          example: "D7 → 0123456, X5 → 0ABCD"
+
+        random_32bit:
+          name: "32-Bit-Zufallszahl"
+          help: "Generiert eine zufällige 32-Bit-Zahl. Unterstützt Dezimal- und Hexadezimalformate."
+          example: "D10 → 1234567890, X8 → 00ABCDEF"
+
+        random_6_digit:
+          name: "6-stellige Zufallszahl"
+          help: "Generiert eine Zufallszahl mit 6 Stellen. Du kannst das Zahlenformat anpassen."
+          example: "D6 → 123456"
+
+        random_9_digit:
+          name: "9-stellige Zufallszahl"
+          help: "Generiert eine Zufallszahl mit 9 Stellen. Du kannst das Zahlenformat anpassen."
+          example: "D9 → 123456789"
+
+        guid:
+          name: "GUID"
+          help: "Generiert eine global eindeutige Kennung mit Buchstaben, Zahlen und Bindestrichen."
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+        date:
+          name: "Datum"
+          help: "Fügt das aktuelle Datum hinzu, wenn ein Artikel erstellt wird. Das Format ist YYYYMMDD."
+          example: "20261112"
+
+        time:
+          name: "Uhrzeit"
+          help: "Fügt die aktuelle Uhrzeit hinzu, wenn ein Artikel erstellt wird. Das Format ist HHMMSS."
+          example: "143025"
+
+    access:
+      title: "Zugriff verwalten"
+      subtitle: "Gib bestimmten Benutzern die Berechtigung, Artikel hinzuzufügen, zu bearbeiten und zu löschen."
+      add_user: "Benutzer hinzufügen"
+      search_label: "Nach Benutzername oder E-Mail suchen"
+      search_placeholder: "Benutzername oder E-Mail eingeben..."
+      selected: "Ausgewählt"
+      no_results: "Keine passenden Benutzer gefunden."
+      select_user_message: "Bitte wähle einen Benutzer aus den Suchergebnissen aus."
+      grant_access: "Zugriff gewähren"
+      users_with_access: "Benutzer mit Zugriff"
+      sort_by: "Sortieren nach:"
+      username: "Benutzername"
+      email: "E-Mail"
+      action: "Aktion"
+      remove_access: "Zugriff entfernen"
+      remove_confirmation: "Möchtest du diesem Benutzer den Zugriff entziehen?"
+      no_users: "Bisher wurde keinem Benutzer Zugriff gewährt."
+
+  items:
+    show:
+      title: "Artikeldetails"
+      custom_id: "Benutzerdefinierte ID"
+      not_generated: "Noch nicht generiert"
+      created_by: "Erstellt von"
+      created_at: "Erstellt am"
+      custom_fields: "Benutzerdefinierte Felder"
+      yes: "Ja"
+      no: "Nein"
+      back_to_items: "Zurück zu den Artikeln"
+
+    index:
+      title: "Artikel"
+      subtitle: "Tabelle der Inventarartikel"
+      add_new: "Neuen Artikel hinzufügen"
+      edit_selected: "Ausgewählte bearbeiten"
+      delete_selected: "Ausgewählte löschen"
+      confirm_delete: "Ausgewählte Artikel löschen?"
+      select: "Auswählen"
+      custom_id: "Benutzerdefinierte ID"
+      created_by: "Erstellt von"
+      created_at: "Erstellt am"
+      not_generated: "Nicht generiert"
+      yes: "Ja"
+      no: "Nein"
+      empty_message: "Keine Artikel gefunden."
+      back_to_inventory: "Zurück zum Inventar"
+
+    new:
+      title: "Neuen Artikel hinzufügen"
+      inventory: "Inventar"
+      back_to_items: "Zurück zu den Artikeln"
+
+    form:
+      custom_id: "Benutzerdefinierte ID"
+      custom_id_placeholder: "Benutzerdefinierte ID eingeben"
+      custom_id_help: "Du kannst die benutzerdefinierte ID bearbeiten. Lass das Feld leer, um automatisch eine ID zu generieren."
+      url_placeholder: "https://example.com"
+      yes: "Ja"
+      no: "Nein"
+      save: "Artikel speichern"
+
+    edit:
+      title: "Artikel bearbeiten"
+      inventory: "Inventar"
+      back_to_items: "Zurück zu den Artikeln"
+
+  custom_fields:
+    edit:
+      title: "Benutzerdefiniertes Feld bearbeiten"
+      field_title: "Feldtitel"
+      field_type: "Feldtyp"
+      description: "Beschreibung"
+      show_in_table: "In der Artikeltabelle anzeigen"
+      save: "Änderungen speichern"
+      cancel: "Abbrechen"
+  
+  admin:
+    users:
+      title: "Admin-Bereich"
+      subtitle: "Registrierte Benutzer verwalten"
+      selected_actions: "Aktionen für ausgewählte Benutzer:"
+      choose_action: "Aktion auswählen"
+      apply: "Anwenden"
+      confirm: "Möchtest du diese Aktion wirklich ausführen?"
+      users_count: "Benutzer (%{count})"
+      username: "Benutzername"
+      email: "E-Mail"
+      role: "Rolle"
+      status: "Status"
+      admin_role: "Administrator"
+      user_role: "Benutzer"
+      blocked: "Gesperrt"
+      active: "Aktiv"
+      actions:
+        block: "Sperren"
+        unblock: "Entsperren"
+        promote: "Zum Administrator machen"
+        demote: "Administratorrechte entfernen"
+        delete: "Löschen"
+
+  
+  home:
+    title: "Willkommen bei Inventory Hub"
+    subtitle: "Verwalte deine Inventare und Artikel an einem Ort."
+    inventories:
+      title: "Inventare verwalten"
+      description: "Erstelle und organisiere deine Inventare ganz einfach."
+    items:
+      title: "Artikel verwalten"
+      description: "Behalte alle Artikel deiner Inventare im Überblick."
+    collaborate:
+      title: "Zusammenarbeiten"
+      description: "Teile Inventare und arbeite mit anderen Benutzern zusammen."
+
+  devise:
+    sessions:
+      signed_out: "Du hast dich erfolgreich abgemeldet."
+      signed_in: "Du hast dich erfolgreich angemeldet."

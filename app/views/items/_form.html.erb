@@ -9,19 +9,19 @@
       </ul>
     </div>
   <% end %>
+
   <div class="mb-3">
-      <%= form.label :custom_id, "Custom ID", class: "form-label" %>
+    <%= form.label :custom_id, t("items.form.custom_id"),
+        class: "form-label" %>
 
-      <%= form.text_field :custom_id,
+    <%= form.text_field :custom_id,
         class: "form-control",
-        placeholder: "Enter Custom ID" %>
+        placeholder: t("items.form.custom_id_placeholder") %>
 
-      <div class="form-text">
-        You can edit the Custom ID.
-        Leave it blank to generate one automatically.
-      </div>
+    <div class="form-text">
+      <%= t("items.form.custom_id_help") %>
     </div>
-
+  </div>
 
   <% @item.custom_field_values.each do |field_value| %>
     <% field = field_value.custom_field %>
@@ -50,22 +50,22 @@
 
         <% when "link" %>
           <%= value_form.url_field :value, class: "form-control",
-              placeholder: "https://example.com" %>
+              placeholder: t("items.form.url_placeholder") %>
 
         <% when "boolean" %>
           <div>
             <div class="form-check">
               <%= value_form.radio_button :value, "true",
-                class: "form-check-input" %>
-            <%= value_form.label :value, "Yes",
-                class: "form-check-label" %>
-          </div>
+                  class: "form-check-input" %>
+              <%= value_form.label :value, t("items.form.yes"),
+                  class: "form-check-label" %>
+            </div>
 
             <div class="form-check">
               <%= value_form.radio_button :value, "false",
-                class: "form-check-input" %>
-              <%= value_form.label :value, "No",
-                class: "form-check-label" %>
+                  class: "form-check-input" %>
+              <%= value_form.label :value, t("items.form.no"),
+                  class: "form-check-label" %>
             </div>
           </div>
         <% end %>
@@ -75,5 +75,5 @@
     <% end %>
   <% end %>
 
-  <%= form.submit class: "btn btn-primary" %>
+  <%= form.submit t("items.form.save"), class: "btn btn-primary" %>
 <% end %>

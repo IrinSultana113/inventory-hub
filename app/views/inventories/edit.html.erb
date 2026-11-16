@@ -3,7 +3,7 @@
     <div class="col-md-7">
       <div class="card shadow-sm">
         <div class="card-body p-4">
-          <h2 class="mb-4">Edit Inventory</h2>
+          <h2 class="mb-4"><%= t("inventories.edit.title") %></h2>
 
           <%= form_with model: @inventory do |form| %>
             <% if @inventory.errors.any? %>
@@ -15,33 +15,35 @@
             <% end %>
 
             <div class="mb-3">
-              <%= form.label :title, class: "form-label" %>
+              <%= form.label :title, t("inventories.edit.title_label"), class: "form-label" %>
               <%= form.text_field :title, class: "form-control" %>
             </div>
 
             <div class="mb-3">
-              <%= form.label :description, class: "form-label" %>
+              <%= form.label :description, t("inventories.edit.description"), class: "form-label" %>
               <%= form.text_area :description, rows: 4, class: "form-control" %>
             </div>
 
             <div class="mb-3">
-              <%= form.label :category, class: "form-label" %>
+              <%= form.label :category, t("inventories.edit.category"), class: "form-label" %>
               <%= form.text_field :category, class: "form-control" %>
             </div>
+
             <div class="form-check mb-3">
               <%= form.check_box :is_public, class: "form-check-input" %>
-              <%= form.label :is_public, "Make this inventory public",
-                class: "form-check-label" %>
+              <%= form.label :is_public, t("inventories.edit.make_public"), class: "form-check-label" %>
               <div class="form-text">
-                Public inventories allow all logged-in users to create, edit, and delete items.
+                <%= t("inventories.edit.public_help") %>
               </div>
             </div>
+
             <div class="mb-4">
               <%= render "custom_id_builder", inventory: @inventory %>
             </div>
+
             <div class="d-flex gap-2">
-              <%= form.submit "Update Inventory", class: "btn btn-primary" %>
-              <%= link_to "Cancel", @inventory, class: "btn btn-outline-secondary" %>
+              <%= form.submit t("inventories.edit.update"), class: "btn btn-primary" %>
+              <%= link_to t("inventories.edit.cancel"), @inventory, class: "btn btn-outline-secondary" %>
             </div>
           <% end %>
         </div>

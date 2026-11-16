@@ -1,8 +1,8 @@
 
 <div class="container mt-4">
   <div class="mb-4">
-    <h2>Admin Panel</h2>
-    <p class="text-muted">Manage registered users</p>
+    <h2><%= t("admin.users.title") %></h2>
+    <p class="text-muted"><%= t("admin.users.subtitle") %></p>
   </div>
 
   <%= form_with url: manage_admin_users_path,
@@ -13,25 +13,25 @@
       <div class="card-body">
         <div class="d-flex flex-wrap align-items-center gap-3">
 
-          <strong>Selected Users Actions:</strong>
+          <strong><%= t("admin.users.selected_actions") %></strong>
 
           <%= select_tag :bulk_action,
               options_for_select([
-                ["Choose action", ""],
-                ["Block", "block"],
-                ["Unblock", "unblock"],
-                ["Make Admin", "promote"],
-                ["Remove Admin", "demote"],
-                ["Delete", "delete"]
+                [t("admin.users.choose_action"), ""],
+                [t("admin.users.actions.block"), "block"],
+                [t("admin.users.actions.unblock"), "unblock"],
+                [t("admin.users.actions.promote"), "promote"],
+                [t("admin.users.actions.demote"), "demote"],
+                [t("admin.users.actions.delete"), "delete"]
               ]),
               class: "form-select",
               style: "width: 190px;",
               required: true %>
 
-          <%= submit_tag "Apply",
+          <%= submit_tag t("admin.users.apply"),
               class: "btn btn-primary",
               data: {
-                turbo_confirm: "Are you sure you want to apply this action?"
+                turbo_confirm: t("admin.users.confirm")
               } %>
         </div>
       </div>
@@ -39,7 +39,9 @@
 
     <div class="card">
       <div class="card-header">
-        <strong>Users (<%= @users.count %>)</strong>
+        <strong>
+          <%= t("admin.users.users_count", count: @users.count) %>
+        </strong>
       </div>
 
       <div class="table-responsive">
@@ -51,10 +53,10 @@
                        id="selectAllUsers"
                        class="form-check-input">
               </th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
+              <th><%= t("admin.users.username") %></th>
+              <th><%= t("admin.users.email") %></th>
+              <th><%= t("admin.users.role") %></th>
+              <th><%= t("admin.users.status") %></th>
             </tr>
           </thead>
 
@@ -73,17 +75,25 @@
 
                 <td>
                   <% if user.admin? %>
-                    <span class="badge bg-primary">Admin</span>
+                    <span class="badge bg-primary">
+                      <%= t("admin.users.admin_role") %>
+                    </span>
                   <% else %>
-                    <span class="badge bg-secondary">User</span>
+                    <span class="badge bg-secondary">
+                      <%= t("admin.users.user_role") %>
+                    </span>
                   <% end %>
                 </td>
 
                 <td>
                   <% if user.blocked? %>
-                    <span class="badge bg-danger">Blocked</span>
+                    <span class="badge bg-danger">
+                      <%= t("admin.users.blocked") %>
+                    </span>
                   <% else %>
-                    <span class="badge bg-success">Active</span>
+                    <span class="badge bg-success">
+                      <%= t("admin.users.active") %>
+                    </span>
                   <% end %>
                 </td>
               </tr>

@@ -4,12 +4,12 @@
     <thead class="table-light">
       <tr>
         <% if selectable %>
-          <th>Select</th>
+          <th><%= t("inventories.custom_fields_table.select") %></th>
         <% end %>
-        <th>Field Title</th>
-        <th>Field Type</th>
-        <th>Description</th>
-        <th>Show in Table</th>
+        <th><%= t("inventories.custom_fields_table.field_title") %></th>
+        <th><%= t("inventories.custom_fields_table.field_type") %></th>
+        <th><%= t("inventories.custom_fields_table.description") %></th>
+        <th><%= t("inventories.custom_fields_table.show_in_table") %></th>
       </tr>
     </thead>
 
@@ -23,9 +23,13 @@
           <% end %>
 
           <td><%= field.title %></td>
-          <td><%= field.field_type.titleize %></td>
+          <td>
+            <%= t("inventories.custom_fields.field_types.#{field.field_type}") %>
+          </td>
           <td><%= field.description.presence || "—" %></td>
-          <td><%= field.show_in_table? ? "Yes" : "No" %></td>
+          <td>
+            <%= field.show_in_table? ? t("common.yes") : t("common.no") %>
+          </td>
         </tr>
       <% end %>
     </tbody>

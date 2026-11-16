@@ -4,12 +4,12 @@
     <thead class="table-light">
       <tr>
         <% if selectable %>
-          <th>Select</th>
+          <th><%= t("inventories.items_table.select") %></th>
         <% end %>
 
-        <th>Custom ID</th>
-        <th>Created By</th>
-        <th>Created At</th>
+        <th><%= t("inventories.items_table.custom_id") %></th>
+        <th><%= t("inventories.items_table.created_by") %></th>
+        <th><%= t("inventories.items_table.created_at") %></th>
 
         <% @custom_fields.each do |field| %>
           <th><%= field.title %></th>
@@ -27,7 +27,7 @@
           <% end %>
 
           <td>
-            <%= link_to item.custom_id.presence || "Not generated",
+            <%= link_to item.custom_id.presence || t("inventories.items_table.not_generated"),
                 inventory_item_path(@inventory, item) %>
           </td>
 
@@ -42,7 +42,9 @@
             <td>
               <% if field_value %>
                 <%= field.field_type == "boolean" ?
-                    (field_value.value == "true" ? "Yes" : "No") :
+                    (field_value.value == "true" ?
+                      t("inventories.items_table.yes") :
+                      t("inventories.items_table.no")) :
                     field_value.value.presence || "—" %>
               <% else %>
                 —

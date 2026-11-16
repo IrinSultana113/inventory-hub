@@ -2,12 +2,13 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-      <h3><%= @inventory.title %> — Items</h3>
-      <p class="text-muted mb-0">Inventory items table</p>
+      <h3><%= @inventory.title %> — <%= t("items.index.title") %></h3>
+      <p class="text-muted mb-0"><%= t("items.index.subtitle") %></p>
     </div>
 
     <% if @inventory.can_write_items?(current_user) %>
-      <%= link_to "Add New Item", new_inventory_item_path(@inventory),
+      <%= link_to t("items.index.add_new"),
+          new_inventory_item_path(@inventory),
           class: "btn btn-primary" %>
     <% end %>
   </div>
@@ -17,7 +18,7 @@
         method: :delete do %>
 
       <div class="mb-3">
-        <%= button_tag "Edit Selected",
+        <%= button_tag t("items.index.edit_selected"),
             type: "submit",
             name: "action_type",
             value: "edit",
@@ -25,19 +26,19 @@
             formmethod: "post",
             class: "btn btn-warning me-2" %>
 
-        <%= submit_tag "Delete Selected",
+        <%= submit_tag t("items.index.delete_selected"),
             class: "btn btn-danger",
-            data: { turbo_confirm: "Delete selected items?" } %>
+            data: { turbo_confirm: t("items.index.confirm_delete") } %>
       </div>
 
       <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
           <thead class="table-light">
             <tr>
-              <th>Select</th>
-              <th>Custom ID</th>
-              <th>Created By</th>
-              <th>Created At</th>
+              <th><%= t("items.index.select") %></th>
+              <th><%= t("items.index.custom_id") %></th>
+              <th><%= t("items.index.created_by") %></th>
+              <th><%= t("items.index.created_at") %></th>
 
               <% @custom_fields.each do |field| %>
                 <th><%= field.title %></th>
@@ -53,7 +54,7 @@
                 </td>
 
                 <td>
-                  <%= link_to item.custom_id.presence || "Not generated",
+                  <%= link_to item.custom_id.presence || t("items.index.not_generated"),
                       inventory_item_path(@inventory, item) %>
                 </td>
 
@@ -68,7 +69,8 @@
                   <td>
                     <% if field_value %>
                       <% if field.field_type == "boolean" %>
-                        <%= field_value.value == "true" ? "Yes" : "No" %>
+                        <%= field_value.value == "true" ?
+                            t("items.index.yes") : t("items.index.no") %>
                       <% else %>
                         <%= field_value.value.presence || "—" %>
                       <% end %>
@@ -89,9 +91,9 @@
       <table class="table table-bordered table-hover align-middle">
         <thead class="table-light">
           <tr>
-            <th>Custom ID</th>
-            <th>Created By</th>
-            <th>Created At</th>
+            <th><%= t("items.index.custom_id") %></th>
+            <th><%= t("items.index.created_by") %></th>
+            <th><%= t("items.index.created_at") %></th>
 
             <% @custom_fields.each do |field| %>
               <th><%= field.title %></th>
@@ -103,7 +105,7 @@
           <% @items.each do |item| %>
             <tr>
               <td>
-                <%= link_to item.custom_id.presence || "Not generated",
+                <%= link_to item.custom_id.presence || t("items.index.not_generated"),
                     inventory_item_path(@inventory, item) %>
               </td>
 
@@ -118,7 +120,8 @@
                 <td>
                   <% if field_value %>
                     <%= field.field_type == "boolean" ?
-                        (field_value.value == "true" ? "Yes" : "No") :
+                        (field_value.value == "true" ?
+                          t("items.index.yes") : t("items.index.no")) :
                         field_value.value.presence || "—" %>
                   <% else %>
                     —
@@ -133,10 +136,12 @@
   <% end %>
 
   <% if @items.empty? %>
-    <p class="text-muted text-center mt-4">No items found.</p>
+    <p class="text-muted text-center mt-4">
+      <%= t("items.index.empty_message") %>
+    </p>
   <% end %>
 
-  <%= link_to "Back to Inventory",
+  <%= link_to t("items.index.back_to_inventory"),
       inventory_path(@inventory),
       class: "btn btn-outline-secondary mt-3" %>
 </div>

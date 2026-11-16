@@ -1,26 +1,26 @@
 
 <div class="container mt-4">
   <div class="mb-4">
-    <h2>My Dashboard</h2>
-    <p class="text-muted">Manage your personal inventories.</p>
+    <h2><%= t("dashboard.title") %></h2>
+    <p class="text-muted"><%= t("dashboard.subtitle") %></p>
   </div>
 
   <div class="card shadow-sm">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">My Inventories</h4>
+        <h4 class="mb-0"><%= t("dashboard.my_inventories") %></h4>
 
-        <%= link_to "Create Inventory", new_inventory_path,
+        <%= link_to t("dashboard.create_inventory"), new_inventory_path,
             class: "btn btn-primary btn-sm" %>
       </div>
 
       <%= form_with url: dashboard_path, method: :get, local: true do |form| %>
         <div class="row g-3 mb-3">
           <div class="col-md-4">
-            <%= form.label :category, "Filter by Category", class: "form-label" %>
+            <%= form.label :category, t("dashboard.filter_category"), class: "form-label" %>
             <%= form.select :category,
                 options_for_select(
-                  [["All Categories", ""]] + @categories.map { |c| [c, c] },
+                  [[t("dashboard.all_categories"), ""]] + @categories.map { |c| [c, c] },
                   params[:category]
                 ),
                 {},
@@ -28,10 +28,10 @@
           </div>
 
           <div class="col-md-4">
-            <%= form.label :sort, "Sort by", class: "form-label" %>
+            <%= form.label :sort, t("dashboard.sort_by"), class: "form-label" %>
             <%= form.select :sort,
                 options_for_select(
-                  [["Newest First", "created_at"], ["Title", "title"]],
+                  [[t("dashboard.newest_first"), "created_at"], [t("dashboard.title_column"), "title"]],
                   params[:sort] || "created_at"
                 ),
                 {},
@@ -39,10 +39,10 @@
           </div>
 
           <div class="col-md-2">
-            <%= form.label :direction, "Direction", class: "form-label" %>
+            <%= form.label :direction, t("dashboard.direction"), class: "form-label" %>
             <%= form.select :direction,
                 options_for_select(
-                  [["Ascending", "asc"], ["Descending", "desc"]],
+                  [[t("dashboard.ascending"), "asc"], [t("dashboard.descending"), "desc"]],
                   params[:direction] || "desc"
                 ),
                 {},
@@ -50,8 +50,8 @@
           </div>
 
           <div class="col-md-2 d-flex align-items-end gap-2">
-            <%= form.submit "Apply", class: "btn btn-primary" %>
-            <%= link_to "Clear", dashboard_path,
+            <%= form.submit t("dashboard.apply"), class: "btn btn-primary" %>
+            <%= link_to t("dashboard.clear"), dashboard_path,
                 class: "btn btn-outline-secondary" %>
           </div>
         </div>
@@ -62,10 +62,10 @@
           <table class="table table-hover table-bordered align-middle">
             <thead class="table-light">
               <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Created At</th>
+                <th><%= t("dashboard.title_column") %></th>
+                <th><%= t("dashboard.category") %></th>
+                <th><%= t("dashboard.description") %></th>
+                <th><%= t("dashboard.created_at") %></th>
               </tr>
             </thead>
 
@@ -86,7 +86,7 @@
         </div>
       <% else %>
         <div class="alert alert-info mb-0">
-          You haven't created any inventories yet.
+          <%= t("dashboard.empty_message") %>
         </div>
       <% end %>
     </div>
