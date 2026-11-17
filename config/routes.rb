@@ -31,7 +31,11 @@ Rails.application.routes.draw do
         post :manage
       end
     end
-    resources :inventory_accesses, only: %i[create destroy]
+    resources :inventory_accesses, only: %i[create destroy] do
+      collection do
+        delete :bulk_destroy
+      end
+    end
   end
   namespace :admin do
     resources :users, only: [:index] do

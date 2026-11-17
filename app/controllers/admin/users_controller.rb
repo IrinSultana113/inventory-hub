@@ -67,21 +67,30 @@ module Admin
     end
 
     def demote_users(users)
-      current_user_selected = users.exists?(id: current_user.id)
+    remaining_admin = User.where(admin: true)
+                        .where.not(id: users.select(:id))
+                        .exists?
 
-      redirect_path = current_user_selected ? root_path : admin_users_path
-      success_message = current_user_selected ?
-        "Your admin role has been removed." :
-        "Admin roles removed."
-
-      bulk_update(
-        users,
-        { admin: false },
-        success_message,
-        "No users selected.",
-        redirect_path
-      )
+    unless remaining_admin
+      return redirect_to admin_users_path,
+        alert: "At least one admin must remain."
     end
+
+    current_user_selected = users.exists?(id: current_user.id)
+
+    redirect_path = current_user_selected ? root_path : admin_users_path
+    success_message = current_user_selected ?
+      "Your admin role has been removed." :
+      "Admin roles removed."
+
+    bulk_update(
+      users,
+      { admin: false },
+      success_message,
+      "No users selected.",
+      redirect_path
+    )
+  end
 
     def delete_users(users)
       eligible_users = users.where.not(id: current_user.id)

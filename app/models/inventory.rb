@@ -27,7 +27,11 @@ class Inventory < ApplicationRecord
 
   def can_write_items?(user)
     return false unless user
+    return false unless user.active_for_authentication?
 
-    user.admin? || user_id == user.id || is_public? || inventory_accesses.exists?(user_id: user.id)
+    user.admin? ||
+      user_id == user.id ||
+      is_public? ||
+      inventory_accesses.exists?(user_id: user.id)
   end
 end

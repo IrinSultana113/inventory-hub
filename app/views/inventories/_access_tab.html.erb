@@ -63,36 +63,56 @@
 </div>
 
 <% if @inventory_accesses.any? %>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="table-light">
-        <tr>
-          <th><%= t("inventories.access.username") %></th>
-          <th><%= t("inventories.access.email") %></th>
-          <th><%= t("inventories.access.action") %></th>
-        </tr>
-      </thead>
+  <%= form_with url: bulk_destroy_inventory_inventory_accesses_path(@inventory),
+      method: :delete,
+      id: "bulk-remove-access-form",
+      data: { turbo: false } do %>
 
-      <tbody>
-        <% @inventory_accesses.each do |access| %>
+    <div class="mb-3">
+      <button type="submit"
+              id="remove-selected-access"
+              class="btn btn-danger"
+              disabled>
+        Remove Selected Access
+      </button>
+
+      <span class="text-muted ms-2" id="selected-access-count">
+        0 selected
+      </span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
           <tr>
-            <td><%= access.user.username %></td>
-            <td><%= access.user.email %></td>
-            <td>
-              <%= button_to t("inventories.access.remove_access"),
-                  inventory_inventory_access_path(@inventory, access),
-                  method: :delete,
-                  class: "btn btn-sm btn-danger",
-                  data: {
-                    turbo: false,
-                    confirm: t("inventories.access.remove_confirmation")
-                  } %>
-            </td>
+            <th>
+              <input type="checkbox"
+                     id="select-all-access"
+                     class="form-check-input">
+            </th>
+            <th><%= t("inventories.access.username") %></th>
+            <th><%= t("inventories.access.email") %></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+
+        <tbody>
+          <% @inventory_accesses.each do |access| %>
+            <tr>
+              <td>
+                <input type="checkbox"
+                       name="access_ids[]"
+                       value="<%= access.id %>"
+                       class="form-check-input access-checkbox">
+              </td>
+
+              <td><%= access.user.username %></td>
+              <td><%= access.user.email %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
 <% else %>
   <p class="text-muted">
     <%= t("inventories.access.no_users") %>
@@ -172,5 +192,64 @@
         alert(searchInput.dataset.selectUserMessage);
       }
     });
+  })();
+
+    (() => {
+    const selectAll = document.getElementById("select-all-access");
+    const checkboxes = document.querySelectorAll(".access-checkbox");
+    const removeButton = document.getElementById("remove-selected-access");
+    const selectedCount = document.getElementById("selected-access-count");
+    const form = document.getElementById("bulk-remove-access-form");
+
+    if (!selectAll || !removeButton || !form) return;
+    if (selectAll.dataset.initialized) return;
+
+    selectAll.dataset.initialized = "true";
+
+    function updateSelection() {
+      const checked = document.querySelectorAll(
+        ".access-checkbox:checked"
+      );
+
+      const count = checked.length;
+
+      removeButton.disabled = count === 0;
+      selectedCount.textContent = `${count} selected`;
+
+      selectAll.checked =
+        checkboxes.length > 0 && count === checkboxes.length;
+
+      selectAll.indeterminate =
+        count > 0 && count < checkboxes.length;
+    }
+
+    selectAll.addEventListener("change", () => {
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked;
+      });
+
+      updateSelection();
+    });
+
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", updateSelection);
+    });
+
+    form.addEventListener("submit", (event) => {
+      const count = document.querySelectorAll(
+        ".access-checkbox:checked"
+      ).length;
+
+      if (count === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      if (!confirm(`Remove access for ${count} selected user(s)?`)) {
+        event.preventDefault();
+      }
+    });
+
+    updateSelection();
   })();
 </script>

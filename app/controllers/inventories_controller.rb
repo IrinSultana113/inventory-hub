@@ -61,9 +61,7 @@ class InventoriesController < ApplicationController
   end
 
   def access
-    sort_column = params[:sort] == "email" ? :email : :username
-
-    @authorized_users = @inventory.authorized_users.order(sort_column)
+     @inventory_accesses = sorted_inventory_accesses
   end
 
   def user_search
