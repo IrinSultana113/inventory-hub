@@ -30,7 +30,7 @@ class ItemsController < ApplicationController
       if @item.custom_id.blank?
         100.times do
           @item.custom_id = CustomIdGenerator.new(
-            @inventory,
+            @inventory, 
             sequence_number: sequence_number
           ).generate
 
@@ -43,12 +43,10 @@ class ItemsController < ApplicationController
         if @inventory.items.exists?(custom_id: @item.custom_id)
           @item.errors.add(:custom_id, "could not generate a unique ID")
           raise ActiveRecord::Rollback
-       end
+        end
       end
 
-      unless @item.save
-        raise ActiveRecord::Rollback
-      end
+      raise ActiveRecord::Rollback unless @item.save
     end
 
     if @item.persisted?
@@ -57,6 +55,10 @@ class ItemsController < ApplicationController
     else
       render_item_form(:new)
     end
+
+    rescue ActiveRecord::RecordNotUnique
+      @item.errors.add(:custom_id, "has already been taken")
+    render_item_form(:new)
   end
 
   def edit
