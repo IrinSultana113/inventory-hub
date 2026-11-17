@@ -51,6 +51,26 @@ class CustomFieldsController < ApplicationController
     end
   end
 
+  def reorder
+    field_ids = params[:field_ids]
+
+    unless field_ids.is_a?(Array) &&
+         field_ids.size == @inventory.custom_fields.count &&
+         field_ids.map(&:to_s).sort ==
+         @inventory.custom_fields.pluck(:id).map(&:to_s).sort
+
+    return head :unprocessable_entity
+    end
+
+    CustomField.transaction do
+      field_ids.each_with_index do |field_id, index|
+        @inventory.custom_fields.where(id: field_id).update_all(position: index + 1)
+      end
+    end
+
+    head :ok
+  end
+
   private
 
   def set_inventory

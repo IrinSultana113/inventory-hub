@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     resources :custom_fields, only: %i[create edit update destroy] do
       collection do
         post :manage
+        patch :reorder
       end
     end
      resources :items, only: %i[index show new create edit update destroy] do

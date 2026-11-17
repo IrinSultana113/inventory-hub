@@ -1,9 +1,15 @@
 
-<div class="table-responsive">
+<div class="table-responsive"
+     <% if selectable %>
+       data-controller="custom-fields-sort"
+       data-custom-fields-sort-url-value="<%= reorder_inventory_custom_fields_path(@inventory) %>"
+     <% end %>>
+
   <table class="table table-bordered table-hover align-middle">
     <thead class="table-light">
       <tr>
         <% if selectable %>
+          <th>Order</th>
           <th><%= t("inventories.custom_fields_table.select") %></th>
         <% end %>
         <th><%= t("inventories.custom_fields_table.field_title") %></th>
@@ -15,8 +21,22 @@
 
     <tbody>
       <% @inventory.custom_fields.order(:position).each do |field| %>
-        <tr>
+        <tr
           <% if selectable %>
+            draggable="true"
+            data-field-id="<%= field.id %>"
+            data-action="
+              dragstart->custom-fields-sort#dragStart
+              dragover->custom-fields-sort#dragOver
+              dragend->custom-fields-sort#dragEnd
+            "
+            style="cursor: grab;"
+          <% end %>
+        >
+          <% if selectable %>
+            <td title="Drag to reorder">
+              <i class="bi bi-grip-vertical"></i>
+            </td>
             <td>
               <%= check_box_tag "custom_field_ids[]", field.id, false %>
             </td>

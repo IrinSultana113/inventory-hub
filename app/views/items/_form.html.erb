@@ -22,6 +22,25 @@
       <%= t("items.form.custom_id_help") %>
     </div>
   </div>
+    
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Created By</label>
+        <input type="text"
+           class="form-control"
+           value="<%= @item.persisted? ? @item.user.username : current_user.username %>"
+           readonly>
+      </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Created At</label>
+      <input type="text"
+           class="form-control"
+           value="<%= @item.persisted? ? l(@item.created_at, format: :long) : 'Automatically set when saved' %>"
+           readonly>
+      </div>
+    </div>
+
 
   <% @item.custom_field_values.each do |field_value| %>
     <% field = field_value.custom_field %>
@@ -32,11 +51,20 @@
       <div class="mb-3">
         <%= value_form.label :value, field.title, class: "form-label" %>
 
-        <% if field.description.present? %>
-          <div class="form-text mb-1">
-            <%= field.description %>
-          </div>
-        <% end %>
+        
+  <% if field.description.present? %>
+    <span
+      class="d-inline-flex align-items-center ms-1 text-secondary"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="<%= field.description %>"
+      role="img"
+      aria-label="<%= field.description %>"
+      tabindex="0">
+      ⓘ
+    </span>
+  <% end %>
+
 
         <% case field.field_type %>
         <% when "string" %>
@@ -53,20 +81,18 @@
               placeholder: t("items.form.url_placeholder") %>
 
         <% when "boolean" %>
-          <div>
-            <div class="form-check">
-              <%= value_form.radio_button :value, "true",
-                  class: "form-check-input" %>
-              <%= value_form.label :value, t("items.form.yes"),
-                  class: "form-check-label" %>
-            </div>
+          <div class="form-check">
+            <%= value_form.check_box :value,
+            {
+              class: "form-check-input",
+              checked: field_value.value == "true"
+            },
+            "true",
+            "false" %>
 
-            <div class="form-check">
-              <%= value_form.radio_button :value, "false",
-                  class: "form-check-input" %>
-              <%= value_form.label :value, t("items.form.no"),
-                  class: "form-check-label" %>
-            </div>
+            <%= value_form.label :value,
+              t("items.form.yes"),
+              class: "form-check-label" %>
           </div>
         <% end %>
 
