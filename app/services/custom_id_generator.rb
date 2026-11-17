@@ -48,7 +48,7 @@ class CustomIdGenerator
   end
   
   def format_number(number, format)
-    format_type = format.to_s.first
+    format_type = format.to_s.first.upcase
     length = format.to_s[1..-1].to_i
 
     formatted_number =

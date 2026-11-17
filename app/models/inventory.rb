@@ -7,6 +7,7 @@ class Inventory < ApplicationRecord
   has_many :authorized_users, through: :inventory_accesses, source: :user
   validates :title, presence: true
   validates :category, presence: true
+  validates_with ::CustomIdFormatValidator, attributes: [:custom_id_format]
 
   scope :public_inventories, -> { where(is_public: true) }
   scope :private_inventories, -> { where(is_public: false) }

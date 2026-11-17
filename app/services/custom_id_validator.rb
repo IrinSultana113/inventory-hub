@@ -66,7 +66,7 @@ class CustomIdValidator
 
   def number_pattern(format, unlimited: false,
                      max_decimal_length: nil, max_hex_length: nil)
-    format_type = format.to_s[0]
+    format_type = format.to_s[0].upcase
     length = format.to_s[1..].to_i
 
     unless ["D", "X"].include?(format_type) && length.positive?

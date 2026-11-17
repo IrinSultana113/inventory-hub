@@ -101,7 +101,7 @@ export default class extends Controller {
     if (!this.draggedElement) return
 
     if (!this.listTarget.contains(event.target)) {
-      this.draggedElement.remove()
+      this.draggedElement.classList.remove("opacity-50")
       this.draggedElement = null
 
       this.updateElementInputs()
@@ -199,7 +199,7 @@ export default class extends Controller {
         if (type === "sequence") {
           preview += this.exampleNumber(format, 1)
         } else {
-          preview += this.exampleRandom(type)
+          preview += this.exampleRandom(type, format)
         }
 
       } else if (type === "guid") {
@@ -242,12 +242,11 @@ export default class extends Controller {
 
 
   isValidNumberFormat(format) {
-    return /^[DX][1-9][0-9]*$/.test(format)
+    return /^[DXdx][1-9][0-9]*$/.test(format)
   }
 
-  
   exampleNumber(format, number) {
-    const type = format[0]
+    const type = format[0].toUpperCase()
     const length = parseInt(format.slice(1), 10)
 
     const exampleValue = type === "X" ? 255 : number
@@ -258,14 +257,14 @@ export default class extends Controller {
   }
 
 
-  exampleRandom(type) {
+  exampleRandom(type, format) {
     const examples = {
-      random_20bit: "1234567",
-      random_32bit: "1234567890",
-      random_6_digit: "123456",
-      random_9_digit: "123456789"
+      random_20bit: 1234567,
+      random_32bit: 1234567890,
+      random_6_digit: 123456,
+      random_9_digit: 123456789
     }
 
-    return examples[type]
-  }
+    return this.exampleNumber(format, examples[type])
+}
 }
