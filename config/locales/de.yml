@@ -47,6 +47,11 @@ de:
     description: "Beschreibung"
     created_at: "Erstellt am"
     empty_message: "Du hast noch keine Inventare erstellt."
+    owned_inventories: "Meine Inventare"
+    writable_inventories: "Bearbeitbare Inventare"
+    owned_empty_message: "Du hast noch keine Inventare erstellt."
+    writable_empty_message: "Du hast noch keinen Zugriff auf andere Inventare."
+    owner: "Besitzer"
 
   common:
     "yes": "Ja"

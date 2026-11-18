@@ -66,6 +66,11 @@ en:
     description: "Description"
     created_at: "Created At"
     empty_message: "You haven't created any inventories yet."
+    owned_inventories: "My Inventories"
+    writable_inventories: "Writable Inventories"
+    owned_empty_message: "You haven't created any inventories yet."
+    writable_empty_message: "You don't have access to any other inventories yet."
+    owner: "Owner"
 
   time:
     formats:

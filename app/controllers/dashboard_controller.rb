@@ -29,7 +29,7 @@ class DashboardController < ApplicationController
 
   def writable_inventories
     if current_user.admin?
-      Inventory.where.not(user_id: current_user.id)
+      Inventory.where.not(user_id: current_user.id).includes(:user)
     else
       accessible_ids = InventoryAccess
         .where(user_id: current_user.id)
@@ -39,6 +39,7 @@ class DashboardController < ApplicationController
         .where(is_public: true)
         .or(Inventory.where(id: accessible_ids))
         .where.not(user_id: current_user.id)
+        .includes(:user)
     end
   end
 
