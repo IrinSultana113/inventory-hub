@@ -114,6 +114,26 @@ en:
       statistics_coming_soon: "Inventory statistics and aggregations will be available soon."
       owner: "Owner"
       created: "Created"
+
+    statistics:
+      title: "Inventory Statistics"
+      subtitle: "Read-only summary and analysis of this inventory's items."
+      total_items: "Total Items"
+      numeric_title: "Numeric Field Statistics"
+      string_title: "Most Frequently Used String Values"
+      top_five_note: "Showing up to 5 most frequently used values for each field."
+      field: "Field"
+      count: "Values Count"
+      average: "Average"
+      minimum: "Minimum"
+      maximum: "Maximum"
+      range: "Range"
+      value: "Value"
+      usage_count: "Usage Count"
+      no_numeric_fields: "This inventory has no numeric fields."
+      no_numeric_values: "No numeric values available."
+      no_string_fields: "This inventory has no single-line text fields."
+      no_string_values: "No values available for this field."
     
     items:
       title: "Inventory Items"

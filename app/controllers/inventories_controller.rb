@@ -16,6 +16,8 @@ class InventoriesController < ApplicationController
                              .where(show_in_table: true)
                              .order(:position)
     @inventory_accesses = sorted_inventory_accesses if can_manage_inventory?
+
+    @statistics = build_statistics
   end
 
   def new
@@ -156,5 +158,80 @@ class InventoriesController < ApplicationController
             .joins(:user)
             .includes(:user)
             .order(column)
+  end
+
+    def build_statistics
+    fields = @inventory.custom_fields.order(:position).to_a
+
+    numeric_fields = fields.select { |field| field.field_type == "number" }
+    string_fields = fields.select { |field| field.field_type == "string" }
+
+    {
+      total_items: @inventory.items.count,
+      numeric_fields: numeric_field_statistics(numeric_fields),
+      string_fields: string_field_statistics(string_fields)
+    }
+  end
+
+  def numeric_field_statistics(fields)
+    values = numeric_values_by_field(fields.map(&:id))
+
+    fields.map do |field|
+      numbers = values[field.id] || []
+
+      {
+        title: field.title,
+        count: numbers.length,
+        average: numbers.any? ? (numbers.sum / numbers.length).round(2) : nil,
+        minimum: numbers.min,
+        maximum: numbers.max,
+        range: numbers.any? ? (numbers.max - numbers.min).round(2) : nil
+      }
+    end
+  end
+
+  def numeric_values_by_field(field_ids)
+    return {} if field_ids.empty?
+
+    records = CustomFieldValue
+      .joins(:item)
+      .where(items: { inventory_id: @inventory.id })
+      .where(custom_field_id: field_ids)
+      .where.not(value: [nil, ""])
+      .pluck(:custom_field_id, :value)
+
+    records.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(field_id, value), result|
+      number = BigDecimal(value.to_s, exception: false)
+      result[field_id] << number if number
+    end
+  end
+
+  def string_field_statistics(fields)
+    counts = string_value_counts(fields.map(&:id))
+
+    fields.map do |field|
+      popular_values = counts
+        .select { |(field_id, _value), _count| field_id == field.id }
+        .map { |(_field_id, value), count| { value: value, count: count } }
+        .sort_by { |entry| [-entry[:count], entry[:value].to_s.downcase] }
+        .first(5)
+
+      {
+        title: field.title,
+        values: popular_values
+      }
+    end
+  end
+
+  def string_value_counts(field_ids)
+    return {} if field_ids.empty?
+
+    CustomFieldValue
+      .joins(:item)
+      .where(items: { inventory_id: @inventory.id })
+      .where(custom_field_id: field_ids)
+      .where.not(value: [nil, ""])
+      .group(:custom_field_id, :value)
+      .count
   end
 end

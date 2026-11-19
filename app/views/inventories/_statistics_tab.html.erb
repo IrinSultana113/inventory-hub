@@ -1,0 +1,127 @@
+<div class="mb-4">
+  <h4><%= t("inventories.statistics.title") %></h4>
+  <p class="text-muted">
+    <%= t("inventories.statistics.subtitle") %>
+  </p>
+</div>
+
+<!-- Total Items -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h6 class="text-muted mb-2">
+      <%= t("inventories.statistics.total_items") %>
+    </h6>
+
+    <h2 class="mb-0">
+      <%= number_with_delimiter(@statistics[:total_items]) %>
+    </h2>
+  </div>
+</div>
+
+<!-- Numeric Field Statistics -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-body">
+    <h5 class="mb-0">
+      <%= t("inventories.statistics.numeric_title") %>
+    </h5>
+  </div>
+
+  <div class="card-body">
+    <% if @statistics[:numeric_fields].any? %>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th><%= t("inventories.statistics.field") %></th>
+              <th><%= t("inventories.statistics.count") %></th>
+              <th><%= t("inventories.statistics.average") %></th>
+              <th><%= t("inventories.statistics.minimum") %></th>
+              <th><%= t("inventories.statistics.maximum") %></th>
+              <th><%= t("inventories.statistics.range") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @statistics[:numeric_fields].each do |field| %>
+              <tr>
+                <td><strong><%= field[:title] %></strong></td>
+                <td><%= number_with_delimiter(field[:count]) %></td>
+
+                <% if field[:count].positive? %>
+                  <td><%= number_with_precision(field[:average], precision: 2) %></td>
+                  <td><%= number_with_precision(field[:minimum], precision: 2) %></td>
+                  <td><%= number_with_precision(field[:maximum], precision: 2) %></td>
+                  <td><%= number_with_precision(field[:range], precision: 2) %></td>
+                <% else %>
+                  <td colspan="4" class="text-muted text-center">
+                    <%= t("inventories.statistics.no_numeric_values") %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-muted mb-0">
+        <%= t("inventories.statistics.no_numeric_fields") %>
+      </p>
+    <% end %>
+  </div>
+</div>
+
+<!-- Most Frequently Used String Values -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-body">
+    <h5 class="mb-0">
+      <%= t("inventories.statistics.string_title") %>
+    </h5>
+    <small class="text-muted">
+      <%= t("inventories.statistics.top_five_note") %>
+    </small>
+  </div>
+
+  <div class="card-body">
+    <% if @statistics[:string_fields].any? %>
+      <% @statistics[:string_fields].each do |field| %>
+        <div class="mb-4">
+          <h6 class="fw-bold"><%= field[:title] %></h6>
+
+          <% if field[:values].any? %>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th><%= t("inventories.statistics.value") %></th>
+                    <th style="width: 160px;">
+                      <%= t("inventories.statistics.usage_count") %>
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% field[:values].each do |entry| %>
+                    <tr>
+                      <td><%= entry[:value] %></td>
+                      <td>
+                        <%= number_with_delimiter(entry[:count]) %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">
+              <%= t("inventories.statistics.no_string_values") %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-muted mb-0">
+        <%= t("inventories.statistics.no_string_fields") %>
+      </p>
+    <% end %>
+  </div>
+</div>

@@ -87,6 +87,26 @@ de:
       owner: "Besitzer"
       created: "Erstellt"
 
+    statistics:
+      title: "Inventarstatistiken"
+      subtitle: "Schreibgeschützte Übersicht und Analyse der Inventarartikel."
+      total_items: "Artikel insgesamt"
+      numeric_title: "Statistiken numerischer Felder"
+      string_title: "Am häufigsten verwendete Textwerte"
+      top_five_note: "Bis zu 5 am häufigsten verwendete Werte pro Feld."
+      field: "Feld"
+      count: "Anzahl der Werte"
+      average: "Durchschnitt"
+      minimum: "Minimum"
+      maximum: "Maximum"
+      range: "Spannweite"
+      value: "Wert"
+      usage_count: "Verwendung"
+      no_numeric_fields: "Dieses Inventar hat keine numerischen Felder."
+      no_numeric_values: "Keine numerischen Werte vorhanden."
+      no_string_fields: "Dieses Inventar hat keine einzeiligen Textfelder."
+      no_string_values: "Für dieses Feld sind keine Werte vorhanden."
+
     items:
       title: "Inventarartikel"
       subtitle: "Inventarartikel anzeigen und verwalten."
