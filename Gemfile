@@ -70,3 +70,5 @@ end
 gem "devise", "~> 5.0"
 
 gem "fiddle", "~> 1.1"
+
+gem "redcarpet"

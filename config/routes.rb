@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  resources :users, only: [:show]
+
   root "home#index"
 
   resources :inventories do
@@ -18,6 +20,8 @@ Rails.application.routes.draw do
     collection do
       delete :bulk_destroy
     end
+
+    resources :discussion_posts, only: %i[index create]
 
     resources :custom_fields, only: %i[create edit update destroy] do
       collection do

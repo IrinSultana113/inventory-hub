@@ -18,6 +18,8 @@ class InventoriesController < ApplicationController
     @inventory_accesses = sorted_inventory_accesses if can_manage_inventory?
 
     @statistics = build_statistics
+
+    @discussion_posts = @inventory.discussion_posts.includes(:user)
   end
 
   def new

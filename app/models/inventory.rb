@@ -1,10 +1,12 @@
 class Inventory < ApplicationRecord
   belongs_to :user
+
   has_many :custom_fields, dependent: :destroy
   has_many :items, dependent: :destroy
-
   has_many :inventory_accesses, dependent: :destroy
   has_many :authorized_users, through: :inventory_accesses, source: :user
+  has_many :discussion_posts, -> { order(created_at: :asc, id: :asc) }, dependent: :destroy
+  
   validates :title, presence: true
   validates :category, presence: true
   validates_with ::CustomIdFormatValidator, attributes: [:custom_id_format]

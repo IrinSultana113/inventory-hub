@@ -22,6 +22,7 @@
             <div class="mb-3">
               <%= form.label :description, t("inventories.edit.description"), class: "form-label" %>
               <%= form.text_area :description, rows: 4, class: "form-control" %>
+              <%= render "inventories/markdown_guide" %>
             </div>
 
             <div class="mb-3">
