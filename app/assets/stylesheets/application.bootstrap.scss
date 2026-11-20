@@ -1,2 +1,151 @@
+
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+/* General responsive layout */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+main.container {
+  min-width: 0;
+}
+
+.row > *,
+.card,
+.card-body {
+  min-width: 0;
+}
+
+/* Responsive navbar */
+.navbar .navbar-brand {
+  white-space: nowrap;
+}
+
+.navbar-collapse {
+  min-width: 0;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding-top: 1rem;
+  }
+
+  .navbar-collapse > .d-flex {
+    align-items: stretch !important;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .navbar-collapse > .d-flex form,
+  .navbar-collapse > .d-flex .form-select {
+    width: 100%;
+  }
+
+  .navbar-collapse > .d-flex .text-white {
+    padding: 0.4rem 0;
+  }
+
+  .navbar-collapse > .d-flex .btn {
+    width: 100%;
+  }
+}
+
+/* Inventory tabs: allow horizontal scrolling on small screens */
+#inventoryTabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+#inventoryTabs .nav-item {
+  flex: 0 0 auto;
+}
+
+#inventoryTabs .nav-link {
+  white-space: nowrap;
+}
+
+/* Forms */
+.form-control,
+.form-select {
+  max-width: 100%;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+/* Tables inside responsive wrappers */
+.table-responsive {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive > .table {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+/* Images and long text */
+img,
+svg {
+  max-width: 100%;
+}
+
+pre,
+code {
+  overflow-wrap: anywhere;
+}
+
+/* Small screens */
+@media (max-width: 767.98px) {
+  main.container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+  }
+
+  .btn {
+    white-space: normal;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 575.98px) {
+  main.container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .alert {
+    overflow-wrap: anywhere;
+  }
+
+  .card {
+    border-radius: 0.5rem;
+  }
+}

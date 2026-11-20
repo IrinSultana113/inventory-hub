@@ -1,17 +1,15 @@
 <div class="container mt-4 mb-5">
   <div class="card shadow-sm">
     <div class="card-body p-4">
+
+      <!-- Inventory Title and Category -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h2><%= @inventory.title %></h2>
+
           <p class="text-muted mb-0">
             <%= t("inventories.show.category") %>: <%= @inventory.category %>
           </p>
-          <% if @inventory.description.present? %>
-            <div class="mt-3">
-              <%= markdown_to_html(@inventory.description) %>
-            </div>
-          <% end %>
         </div>
 
         <%= link_to t("inventories.show.all_inventories"),
@@ -26,14 +24,16 @@
 
       <% can_write = @inventory.can_write_items?(current_user) %>
 
+      <!-- Tab Navigation -->
       <ul class="nav nav-tabs mb-4" id="inventoryTabs" role="tablist">
 
         <li class="nav-item">
-          <button class="nav-link active"
+          <button class="nav-link"
                   id="items-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#items"
-                  type="button">
+                  type="button"
+                  role="tab">
             <%= t("inventories.show.items") %>
           </button>
         </li>
@@ -43,7 +43,8 @@
                   id="discussion-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#discussion"
-                  type="button">
+                  type="button"
+                  role="tab">
             <%= t("inventories.show.discussion") %>
           </button>
         </li>
@@ -53,7 +54,8 @@
                   id="settings-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#settings"
-                  type="button">
+                  type="button"
+                  role="tab">
             <%= t("inventories.show.general_settings") %>
           </button>
         </li>
@@ -63,7 +65,8 @@
                   id="custom-id-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#custom-id"
-                  type="button">
+                  type="button"
+                  role="tab">
             <%= t("inventories.show.custom_id") %>
           </button>
         </li>
@@ -74,7 +77,8 @@
                     id="access-tab"
                     data-bs-toggle="tab"
                     data-bs-target="#access"
-                    type="button">
+                    type="button"
+                    role="tab">
               <%= t("inventories.show.access") %>
             </button>
           </li>
@@ -85,7 +89,8 @@
                   id="custom-fields-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#custom-fields"
-                  type="button">
+                  type="button"
+                  role="tab">
             <%= t("inventories.show.custom_fields") %>
           </button>
         </li>
@@ -95,78 +100,73 @@
                   id="statistics-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#statistics"
-                  type="button">
+                  type="button"
+                  role="tab">
             <%= t("inventories.show.statistics") %>
           </button>
         </li>
 
       </ul>
 
+      <!-- Default Description -->
+      <div id="inventory-description" class="mb-4">
+        <% if @inventory.description.present? %>
+          <%= markdown_to_html(@inventory.description) %>
+        <% end %>
+      </div>
+
+      <!-- Tab Contents -->
       <div class="tab-content">
 
-        <!-- 1. Items -->
-        <div class="tab-pane fade show active"
+        <div class="tab-pane fade"
              id="items"
-             role="tabpanel">
-
+             role="tabpanel"
+             aria-labelledby="items-tab">
           <%= render "items_tab" %>
-
         </div>
 
-        <!-- 2. Discussion -->
         <div class="tab-pane fade"
              id="discussion"
-             role="tabpanel">
-
+             role="tabpanel"
+             aria-labelledby="discussion-tab">
           <%= render "discussion_tab" %>
-
         </div>
 
-        <!-- 3. General Settings -->
         <div class="tab-pane fade"
              id="settings"
-             role="tabpanel">
-
+             role="tabpanel"
+             aria-labelledby="settings-tab">
           <%= render "settings_tab" %>
-
         </div>
 
-        <!-- 4. Custom ID -->
         <div class="tab-pane fade"
              id="custom-id"
-             role="tabpanel">
-
+             role="tabpanel"
+             aria-labelledby="custom-id-tab">
           <%= render "custom_id_tab" %>
-
         </div>
 
-        <!-- 5. Access -->
         <% if can_manage %>
           <div class="tab-pane fade"
                id="access"
-               role="tabpanel">
-
+               role="tabpanel"
+               aria-labelledby="access-tab">
             <%= render "access_tab" %>
-
           </div>
         <% end %>
 
-        <!-- 6. Custom Fields -->
         <div class="tab-pane fade"
              id="custom-fields"
-             role="tabpanel">
-
+             role="tabpanel"
+             aria-labelledby="custom-fields-tab">
           <%= render "custom_fields_tab" %>
-
         </div>
 
-        <!-- 7. Statistics -->
         <div class="tab-pane fade"
-            id="statistics"
-            role="tabpanel">
-
+             id="statistics"
+             role="tabpanel"
+             aria-labelledby="statistics-tab">
           <%= render "statistics_tab" %>
-
         </div>
 
       </div>
@@ -186,29 +186,3 @@
     </div>
   </div>
 </div>
-
-<script>
-function activateInventoryTabFromHash() {
-  const hash = window.location.hash;
-
-  if (!hash || !window.bootstrap) return;
-
-  const tabButton = document.querySelector(
-    `#inventoryTabs [data-bs-target="${hash}"]`
-  );
-
-  if (tabButton) {
-    bootstrap.Tab.getOrCreateInstance(tabButton).show();
-  }
-}
-
-document.addEventListener(
-  "DOMContentLoaded",
-  activateInventoryTabFromHash
-);
-
-document.addEventListener(
-  "turbo:load",
-  activateInventoryTabFromHash
-);
-</script>

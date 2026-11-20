@@ -57,7 +57,8 @@ class InventoriesController < ApplicationController
 
   def update_custom_id_format
     if @inventory.update(custom_id_format_params)
-      redirect_to custom_id_format_inventory_path(@inventory),
+      redirect_to inventory_path(@inventory, anchor: "custom-id"),
+                status: :see_other,
                 notice: "Custom ID format updated successfully."
     else
       render :custom_id_format, status: :unprocessable_entity

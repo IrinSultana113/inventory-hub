@@ -12,8 +12,9 @@
 <% if can_manage %>
 
   <%= form_with model: @inventory,
-      url: update_custom_id_format_inventory_path(@inventory),
-      method: :patch do |form| %>
+    url: update_custom_id_format_inventory_path(@inventory),
+    method: :patch,
+    data: { turbo: false } do |form| %>
 
     <%= render "custom_id_builder" %>
 
