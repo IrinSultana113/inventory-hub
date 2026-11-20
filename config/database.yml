@@ -30,6 +30,10 @@ test:
   <<: *default
   database: inventory_hub_test
 
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 
   # The specified database role being used to connect to PostgreSQL.
