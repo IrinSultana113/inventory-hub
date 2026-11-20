@@ -87,6 +87,22 @@ de:
       owner: "Besitzer"
       created: "Erstellt"
 
+    discussion:
+      write_comment: "Kommentar schreiben"
+      comment: "Kommentar"
+      comment_placeholder: "Schreibe deinen Kommentar... Markdown wird unterstützt."
+      post_comment: "Kommentar veröffentlichen"
+      sign_in_to_write: "Melde dich an, um einen Kommentar zu schreiben."
+      markdown_guide: "Markdown-Anleitung — Wie formatierst du deine Beschreibung?"
+      markdown_supported: "Markdown wird unterstützt."
+      markdown_guide: "Markdown-Anleitung — Wie formatierst du deine Beschreibung?"
+      large_heading: "Große Überschrift"
+      smaller_heading: "Kleinere Überschrift"
+      bold_text: "Fetter Text"
+      italic_text: "Kursiver Text"
+      bullet_list: "Aufzählungsliste"
+      link: "Link"
+
     statistics:
       title: "Inventarstatistiken"
       subtitle: "Schreibgeschützte Übersicht und Analyse der Inventarartikel."
@@ -192,6 +208,8 @@ de:
       field_type: "Feldtyp"
       description: "Beschreibung"
       show_in_table: "In der Tabelle anzeigen"
+      order: "Reihenfolge"
+      drag_to_reorder: "Zum Neuordnen ziehen"
 
     custom_id:
       title: "Format der benutzerdefinierten ID"
@@ -278,6 +296,10 @@ de:
       remove_access: "Zugriff entfernen"
       remove_confirmation: "Möchtest du diesem Benutzer den Zugriff entziehen?"
       no_users: "Bisher wurde keinem Benutzer Zugriff gewährt."
+      remove_selected: "Ausgewählten Zugriff entfernen"
+      selected_count: "%{count} ausgewählt"
+      selected_count_template: "%{count} ausgewählt"
+      confirm_remove: "Zugriff für %{count} ausgewählte Benutzer entfernen?"
 
   items:
     show:
@@ -321,6 +343,9 @@ de:
       yes: "Ja"
       no: "Nein"
       save: "Artikel speichern"
+      created_by: "Erstellt von"
+      created_at: "Erstellt am"
+      automatically_set: "Wird beim Speichern automatisch festgelegt"
 
     edit:
       title: "Artikel bearbeiten"
@@ -360,6 +385,15 @@ de:
         promote: "Zum Administrator machen"
         demote: "Administratorrechte entfernen"
         delete: "Löschen"
+
+  users:
+    profile:
+      title: "Benutzerprofil"
+      public_inventories: "Öffentliche Inventare"
+      inventory_title: "Titel"
+      category: "Kategorie"
+      created_at: "Erstellt am"
+      no_public_inventories: "Noch keine öffentlichen Inventare vorhanden."
 
   
   home:

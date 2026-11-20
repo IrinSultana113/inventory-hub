@@ -67,7 +67,7 @@ module Admin
     end
 
     def demote_users(users)
-    remaining_admin = User.where(admin: true)
+      remaining_admin = User.where(admin: true)
                         .where.not(id: users.select(:id))
                         .exists?
 

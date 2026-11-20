@@ -53,6 +53,7 @@
 
 <div class="mb-3">
   <%= t("inventories.access.sort_by") %>
+
   <%= link_to t("inventories.access.username"),
       inventory_path(@inventory, sort: "username", anchor: "access"),
       class: "btn btn-sm btn-outline-secondary" %>
@@ -73,11 +74,14 @@
               id="remove-selected-access"
               class="btn btn-danger"
               disabled>
-        Remove Selected Access
+        <%= t("inventories.access.remove_selected") %>
       </button>
 
-      <span class="text-muted ms-2" id="selected-access-count">
-        0 selected
+      <span class="text-muted ms-2"
+            id="selected-access-count"
+            data-count-template="<%= t('inventories.access.selected_count') %>">
+            data-confirm-template="<%= t('inventories.access.confirm_remove') %>"
+        <%= t("inventories.access.selected_count", count: 0) %>
       </span>
     </div>
 
@@ -145,7 +149,10 @@
 
       searchTimer = setTimeout(async () => {
         try {
-          const url = new URL(searchInput.dataset.searchUrl, window.location.origin);
+          const url = new URL(
+            searchInput.dataset.searchUrl,
+            window.location.origin
+          );
           url.searchParams.set("q", query);
 
           const response = await fetch(url, {
@@ -194,7 +201,7 @@
     });
   })();
 
-    (() => {
+  (() => {
     const selectAll = document.getElementById("select-all-access");
     const checkboxes = document.querySelectorAll(".access-checkbox");
     const removeButton = document.getElementById("remove-selected-access");
@@ -207,14 +214,14 @@
     selectAll.dataset.initialized = "true";
 
     function updateSelection() {
-      const checked = document.querySelectorAll(
+      const count = document.querySelectorAll(
         ".access-checkbox:checked"
-      );
-
-      const count = checked.length;
+      ).length;
 
       removeButton.disabled = count === 0;
-      selectedCount.textContent = `${count} selected`;
+
+      selectedCount.textContent =
+        selectedCount.dataset.countTemplate.replace("%{count}", count);
 
       selectAll.checked =
         checkboxes.length > 0 && count === checkboxes.length;
@@ -245,7 +252,9 @@
         return;
       }
 
-      if (!confirm(`Remove access for ${count} selected user(s)?`)) {
+      if (!confirm(
+        selectedCount.dataset.confirmTemplate.replace("%{count}", count)
+      )) {
         event.preventDefault();
       }
     });

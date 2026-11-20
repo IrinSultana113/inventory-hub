@@ -24,13 +24,8 @@
       <%= t("inventories.custom_id_builder.add_element") %>
     </label>
 
-    <% elements = %w[
-      fixed_text sequence random_20bit random_32bit
-      random_6_digit random_9_digit guid date time
-    ] %>
-
     <div class="d-flex flex-wrap gap-2">
-      <% elements.each do |type| %>
+      <% element_types.each do |type| %>
         <div class="d-inline-flex align-items-center gap-1">
           <button type="button"
                   class="btn btn-outline-primary btn-sm"
@@ -41,13 +36,13 @@
 
           <details class="position-relative">
             <summary class="text-primary fw-bold"
-                style="cursor:pointer; list-style:none; font-size: 18px;"
-                title="<%= t('inventories.custom_id_builder.learn_about') %>">
-                &#9432;
+                     style="cursor:pointer; list-style:none; font-size:18px;"
+                     title="<%= t('inventories.custom_id_builder.learn_about') %>">
+              &#9432;
             </summary>
 
             <div class="card shadow p-3 position-absolute"
-                 style="z-index: 10; width: 280px; left: 0; top: 25px;">
+                 style="z-index:10; width:280px; left:0; top:25px;">
               <strong>
                 <%= t("inventories.custom_id_builder.elements.#{type}.name") %>
               </strong>
@@ -112,8 +107,10 @@
           </div>
         <% end %>
 
-        <% if ["sequence", "random_20bit", "random_32bit",
-               "random_6_digit", "random_9_digit"].include?(element["type"]) %>
+        <% if [
+          "sequence", "random_20bit", "random_32bit",
+          "random_6_digit", "random_9_digit"
+        ].include?(element["type"]) %>
 
           <div data-number-format-input>
             <label class="form-label">
@@ -129,10 +126,8 @@
                    data-action="input->custom-id-builder#updatePreview">
           </div>
         <% end %>
-
       </div>
     <% end %>
-
   </div>
 
   <template data-custom-id-builder-target="template">
@@ -179,7 +174,6 @@
                data-format-input
                data-action="input->custom-id-builder#updatePreview">
       </div>
-
     </div>
   </template>
 
@@ -192,5 +186,4 @@
          class="fw-bold fs-5 mt-2">
     </div>
   </div>
-
 </div>

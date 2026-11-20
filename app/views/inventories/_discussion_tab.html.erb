@@ -16,7 +16,7 @@
     <% end %>
   <% else %>
     <p class="text-muted" id="no-discussion-posts">
-      No comments yet. Be the first to comment!
+      <%= t("inventories.discussion.no_comments") %>
     </p>
   <% end %>
 
@@ -27,27 +27,30 @@
 <!-- Comment form -->
 <% if user_signed_in? %>
 
-  <h5 class="mb-3">Write a comment</h5>
+  <h5 class="mb-3">
+    <%= t("inventories.discussion.write_comment") %>
+  </h5>
 
   <%= form_with model: [@inventory, DiscussionPost.new],
-              id: "discussion-post-form",
-              data: { turbo: false } do |form| %>
+                id: "discussion-post-form",
+                data: { turbo: false } do |form| %>
 
     <div class="mb-3">
-      <%= form.label :body, "Comment", class: "form-label" %>
+      <%= form.label :body,
+                     t("inventories.discussion.comment"),
+                     class: "form-label" %>
 
       <%= form.text_area :body,
                          rows: 4,
                          maxlength: 10_000,
                          required: true,
                          class: "form-control",
-                         placeholder: "Write your comment... Markdown is supported." %>
+                         placeholder: t("inventories.discussion.comment_placeholder") %>
     </div>
 
+    <%= render "inventories/markdown_guide" %>
 
-  <%= render "inventories/markdown_guide" %>
-
-    <%= form.submit "Post Comment",
+    <%= form.submit t("inventories.discussion.post_comment"),
                     class: "btn btn-primary" %>
 
   <% end %>
@@ -55,9 +58,10 @@
 <% else %>
 
   <div class="alert alert-info">
-    Please
-    <%= link_to "sign in", new_user_session_path %>
-    to write a comment.
+    <%= t("inventories.discussion.please") %>
+    <%= link_to t("inventories.discussion.sign_in"),
+                new_user_session_path %>
+    <%= t("inventories.discussion.sign_in_to_write") %>
   </div>
 
 <% end %>

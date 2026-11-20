@@ -41,13 +41,15 @@
 
             <td>
               <% if field_value %>
-                <%= field.field_type == "boolean" ?
-                    (field_value.value == "true" ?
+                <% if field.field_type == "boolean" %>
+                  <%= field_value.value == "true" ?
                       t("inventories.items_table.yes") :
-                      t("inventories.items_table.no")) :
-                    field_value.value.presence || "—" %>
+                      t("inventories.items_table.no") %>
+                <% else %>
+                  <%= field_value.value.presence || "\u2014" %>
+                <% end %>
               <% else %>
-                —
+                <%= "\u2014" %>
               <% end %>
             </td>
           <% end %>

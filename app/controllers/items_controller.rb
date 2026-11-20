@@ -24,27 +24,11 @@ class ItemsController < ApplicationController
     @item = @inventory.items.build(item_params)
     @item.user = current_user
     @inventory.with_lock do
-      sequence_number = @inventory.items.maximum(:sequence_number).to_i + 1
+      sequence = @inventory.items.maximum(:sequence_number).to_i + 1
 
-      @item.sequence_number = sequence_number
-      if @item.custom_id.blank?
-        100.times do
-          @item.custom_id = CustomIdGenerator.new(
-            @inventory, 
-            sequence_number: sequence_number
-          ).generate
-
-          break unless @inventory.items.exists?(custom_id: @item.custom_id)
-
-          sequence_number += 1
-          @item.sequence_number = sequence_number
-        end
-
-        if @inventory.items.exists?(custom_id: @item.custom_id)
-          @item.errors.add(:custom_id, "could not generate a unique ID")
+        unless assign_unique_custom_id(@item, sequence_number: sequence)
           raise ActiveRecord::Rollback
         end
-      end
 
       raise ActiveRecord::Rollback unless @item.save
     end
@@ -52,13 +36,13 @@ class ItemsController < ApplicationController
     if @item.persisted?
       redirect_to inventory_items_path(@inventory),
                 notice: "Item created successfully."
-    else
-      render_item_form(:new)
+      else
+        render_item_form(:new)
     end
 
     rescue ActiveRecord::RecordNotUnique
       @item.errors.add(:custom_id, "has already been taken")
-    render_item_form(:new)
+      render_item_form(:new)
   end
 
   def edit
@@ -66,12 +50,32 @@ class ItemsController < ApplicationController
   end
 
   def update
-    if @item.update(item_params)
+    attributes = item_params
+
+    if attributes[:custom_id].blank?
+      updated = false
+
+      @inventory.with_lock do
+        sequence = @inventory.items.maximum(:sequence_number).to_i + 1
+
+        if assign_unique_custom_id(
+          @item,
+          sequence_number: sequence,
+          except_id: @item.id
+        )
+          updated = @item.update(attributes.except(:custom_id))
+        end
+      end
+    else
+      updated = @item.update(attributes)
+    end
+
+    if updated
       redirect_to inventory_items_path(@inventory),
-                  notice: "Item updated successfully."
+                notice: "Item updated successfully."
     else
       render_item_form(:edit)
-    end
+      end
   end
 
   def destroy
@@ -125,6 +129,26 @@ class ItemsController < ApplicationController
     @inventory.custom_fields.where(show_in_table: true).order(:position)
   end
 
+  def assign_unique_custom_id(item, sequence_number:, except_id: nil)
+    100.times do
+      item.sequence_number = sequence_number
+      item.custom_id = CustomIdGenerator.new(
+        @inventory,
+        sequence_number: sequence_number
+      ).generate
+
+      existing = @inventory.items.where(custom_id: item.custom_id)
+      existing = existing.where.not(id: except_id) if except_id
+
+      return true unless existing.exists?
+
+      sequence_number += 1
+    end
+
+    item.errors.add(:custom_id, "could not generate a unique ID")
+    false
+  end
+
   def render_item_form(action)
     build_missing_custom_field_values
     render action, status: :unprocessable_entity
@@ -162,6 +186,7 @@ class ItemsController < ApplicationController
       @item.custom_field_values.build(custom_field: field)
     end
   end
+  
   def item_params
     params.require(:item).permit(
       :custom_id, custom_field_values_attributes: %i[id custom_field_id value]

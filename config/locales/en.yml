@@ -115,6 +115,23 @@ en:
       owner: "Owner"
       created: "Created"
 
+    discussion:
+      no_comments: "No comments yet. Be the first to comment!"
+      write_comment: "Write a comment"
+      comment: "Comment"
+      comment_placeholder: "Write your comment... Markdown is supported."
+      post_comment: "Post Comment"
+      please: "Please"
+      sign_in: "sign in"
+      sign_in_to_write: "to write a comment."
+      markdown_guide: "Markdown Guide — How to format your description?"
+      large_heading: "Large heading"
+      smaller_heading: "Smaller heading"
+      bold_text: "Bold text"
+      italic_text: "Italic text"
+      bullet_list: "Bullet list"
+      link: "Link"
+
     statistics:
       title: "Inventory Statistics"
       subtitle: "Read-only summary and analysis of this inventory's items."
@@ -220,6 +237,8 @@ en:
       field_type: "Field Type"
       description: "Description"
       show_in_table: "Show in Table"
+      order: "Order"
+      drag_to_reorder: "Drag to reorder"
 
     custom_id:
       title: "Custom ID Format"
@@ -306,6 +325,10 @@ en:
       remove_access: "Remove Access"
       remove_confirmation: "Remove this user's access?"
       no_users: "No users have been given access yet."
+      remove_selected: "Remove Selected Access"
+      selected_count: "%{count} selected"
+      selected_count_template: "%{count} selected"
+      confirm_remove: "Remove access for %{count} selected user(s)?"
 
   items:
     show:
@@ -349,6 +372,9 @@ en:
       yes: "Yes"
       no: "No"
       save: "Save Item"
+      created_by: "Created By"
+      created_at: "Created At"
+      automatically_set: "Automatically set when saved"
 
     edit:
       title: "Edit Item"
@@ -388,6 +414,15 @@ en:
         promote: "Make Admin"
         demote: "Remove Admin"
         delete: "Delete"
+
+  users:
+    profile:
+      title: "User Profile"
+      public_inventories: "Public Inventories"
+      inventory_title: "Title"
+      category: "Category"
+      created_at: "Created At"
+      no_public_inventories: "No public inventories yet."
 
 
   home:

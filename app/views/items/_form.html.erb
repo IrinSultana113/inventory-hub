@@ -22,49 +22,51 @@
       <%= t("items.form.custom_id_help") %>
     </div>
   </div>
-    
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label class="form-label">Created By</label>
-        <input type="text"
-           class="form-control"
-           value="<%= @item.persisted? ? @item.user.username : current_user.username %>"
-           readonly>
-      </div>
 
+  <div class="row mb-3">
     <div class="col-md-6">
-      <label class="form-label">Created At</label>
+      <label class="form-label">
+        <%= t("items.form.created_by") %>
+      </label>
+
       <input type="text"
-           class="form-control"
-           value="<%= @item.persisted? ? l(@item.created_at, format: :long) : 'Automatically set when saved' %>"
-           readonly>
-      </div>
+             class="form-control"
+             value="<%= @item.persisted? ? @item.user.username : current_user.username %>"
+             readonly>
     </div>
 
+    <div class="col-md-6">
+      <label class="form-label">
+        <%= t("items.form.created_at") %>
+      </label>
+
+      <input type="text"
+             class="form-control"
+             value="<%= @item.persisted? ? l(@item.created_at, format: :long) : t('items.form.automatically_set') %>"
+             readonly>
+    </div>
+  </div>
 
   <% @item.custom_field_values.each do |field_value| %>
     <% field = field_value.custom_field %>
-
     <% next unless field %>
 
     <%= form.fields_for :custom_field_values, field_value do |value_form| %>
       <div class="mb-3">
         <%= value_form.label :value, field.title, class: "form-label" %>
 
-        
-  <% if field.description.present? %>
-    <span
-      class="d-inline-flex align-items-center ms-1 text-secondary"
-      data-bs-toggle="tooltip"
-      data-bs-placement="top"
-      title="<%= field.description %>"
-      role="img"
-      aria-label="<%= field.description %>"
-      tabindex="0">
-      ⓘ
-    </span>
-  <% end %>
-
+        <% if field.description.present? %>
+          <span
+            class="d-inline-flex align-items-center ms-1 text-secondary"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="<%= field.description %>"
+            role="img"
+            aria-label="<%= field.description %>"
+            tabindex="0">
+            &#9432;
+          </span>
+        <% end %>
 
         <% case field.field_type %>
         <% when "string" %>
@@ -77,22 +79,23 @@
           <%= value_form.number_field :value, class: "form-control", step: :any %>
 
         <% when "link" %>
-          <%= value_form.url_field :value, class: "form-control",
+          <%= value_form.url_field :value,
+              class: "form-control",
               placeholder: t("items.form.url_placeholder") %>
 
         <% when "boolean" %>
           <div class="form-check">
             <%= value_form.check_box :value,
-            {
-              class: "form-check-input",
-              checked: field_value.value == "true"
-            },
-            "true",
-            "false" %>
+                {
+                  class: "form-check-input",
+                  checked: field_value.value == "true"
+                },
+                "true",
+                "false" %>
 
             <%= value_form.label :value,
-              t("items.form.yes"),
-              class: "form-check-label" %>
+                t("items.form.yes"),
+                class: "form-check-label" %>
           </div>
         <% end %>
 

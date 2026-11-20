@@ -55,6 +55,6 @@ class DiscussionPostsController < ApplicationController
     redirect_to inventory_path(@inventory, anchor: "discussion"),
                 notice: notice,
                 alert: alert,
-                tatus: :see_other
+                status: :see_other
   end
 end

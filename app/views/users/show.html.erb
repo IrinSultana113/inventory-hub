@@ -1,23 +1,21 @@
 <div class="container mt-4">
-
   <div class="card shadow-sm">
     <div class="card-body">
       <h3><%= @user.username %></h3>
-      <p class="text-muted">User Profile</p>
+      <p class="text-muted"><%= t("users.profile.title") %></p>
     </div>
   </div>
 
-  <h4 class="mt-4">Public Inventories</h4>
+  <h4 class="mt-4"><%= t("users.profile.public_inventories") %></h4>
 
   <% if @inventories.any? %>
-
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Created At</th>
+            <th><%= t("users.profile.inventory_title") %></th>
+            <th><%= t("users.profile.category") %></th>
+            <th><%= t("users.profile.created_at") %></th>
           </tr>
         </thead>
 
@@ -27,20 +25,16 @@
               <td>
                 <%= link_to inventory.title, inventory_path(inventory) %>
               </td>
-
               <td><%= inventory.category %></td>
-
               <td><%= l(inventory.created_at, format: :long) %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
-
   <% else %>
-
-    <p class="text-muted">No public inventories yet.</p>
-
+    <p class="text-muted">
+      <%= t("users.profile.no_public_inventories") %>
+    </p>
   <% end %>
-
 </div>

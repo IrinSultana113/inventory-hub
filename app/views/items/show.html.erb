@@ -1,47 +1,41 @@
 
 <div class="container mt-4">
   <div class="card shadow-sm">
-    <div class="card-body p-4">
-      <h3 class="mb-3"><%= t("items.show.title") %></h3>
-
-      <p>
-        <strong><%= t("items.show.custom_id") %>:</strong>
-        <%= @item.custom_id.presence || t("items.show.not_generated") %>
-      </p>
-
-      <p>
-        <strong><%= t("items.show.created_by") %>:</strong>
-        <%= @item.user.username %>
-      </p>
-
-      <p>
-        <strong><%= t("items.show.created_at") %>:</strong>
-        <%= l(@item.created_at, format: :long) %>
-      </p>
-
-      <hr>
-
-      <h5><%= t("items.show.custom_fields") %></h5>
-
-      <% @custom_field_values.each do |field_value| %>
-        <div class="mb-3">
-          <strong><%= field_value.custom_field.title %>:</strong>
-
-          <% if field_value.custom_field.field_type == "boolean" %>
-            <%= field_value.value == "true" ?
-                t("items.show.yes") : t("items.show.no") %>
-          <% elsif field_value.custom_field.field_type == "link" && field_value.value.present? %>
-            <%= link_to field_value.value, field_value.value,
-                target: "_blank", rel: "noopener" %>
-          <% else %>
-            <%= field_value.value.presence || "—" %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <%= link_to t("items.show.back_to_items"),
-          inventory_items_path(@inventory),
-          class: "btn btn-outline-secondary" %>
+    <div class="card-body">
+      <h3><%= @user.username %></h3>
+      <p class="text-muted"><%= t("users.profile.title") %></p>
     </div>
   </div>
+
+  <h4 class="mt-4"><%= t("users.profile.public_inventories") %></h4>
+
+  <% if @inventories.any? %>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= t("users.profile.inventory_title") %></th>
+            <th><%= t("users.profile.category") %></th>
+            <th><%= t("users.profile.created_at") %></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @inventories.each do |inventory| %>
+            <tr>
+              <td>
+                <%= link_to inventory.title, inventory_path(inventory) %>
+              </td>
+              <td><%= inventory.category %></td>
+              <td><%= l(inventory.created_at, format: :long) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-muted">
+      <%= t("users.profile.no_public_inventories") %>
+    </p>
+  <% end %>
 </div>

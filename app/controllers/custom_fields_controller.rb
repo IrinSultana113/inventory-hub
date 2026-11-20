@@ -11,7 +11,8 @@ class CustomFieldsController < ApplicationController
     if @custom_field.save
       redirect_to inventory_path(@inventory, anchor: "custom-fields"), notice: "Custom field added successfully."
     else
-      redirect_to @inventory, alert: @custom_field.errors.full_messages.to_sentence
+      redirect_to inventory_path(@inventory, anchor: "custom-fields"),
+            alert: @custom_field.errors.full_messages.to_sentence
     end
   end
 

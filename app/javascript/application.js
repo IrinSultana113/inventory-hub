@@ -18,10 +18,9 @@ function initializeTooltips() {
 }
 
 // Activate inventory tab from URL hash
-function activateInventoryTab() {
-  const description = document.getElementById("inventory-description")
 
-  if (!description || !Tab) return
+function activateInventoryTab() {
+  if (!Tab) return
 
   const hash = window.location.hash
 

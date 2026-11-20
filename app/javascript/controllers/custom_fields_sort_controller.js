@@ -51,12 +51,20 @@ export default class extends Controller {
       this.element.querySelectorAll("[data-field-id]")
     ).map(row => row.dataset.fieldId)
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+
+    if (!csrfToken) {
+      alert("Security token missing. Please reload the page.")
+      window.location.reload()
+      return
+    }
+
     try {
       const response = await fetch(this.urlValue, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+          "X-CSRF-Token": csrfToken,
           "Accept": "text/plain"
         },
         body: JSON.stringify({ field_ids: fieldIds }),
@@ -67,8 +75,9 @@ export default class extends Controller {
         throw new Error("Could not save field order")
       }
     } catch (error) {
-      alert("Could not save the new field order. Please reload the page.")
       console.error(error)
+      alert("Could not save the new field order. The page will reload.")
+      window.location.reload()
     }
   }
 }

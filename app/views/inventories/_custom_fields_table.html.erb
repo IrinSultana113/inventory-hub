@@ -9,9 +9,10 @@
     <thead class="table-light">
       <tr>
         <% if selectable %>
-          <th>Order</th>
+          <th><%= t("inventories.custom_fields_table.order") %></th>
           <th><%= t("inventories.custom_fields_table.select") %></th>
         <% end %>
+
         <th><%= t("inventories.custom_fields_table.field_title") %></th>
         <th><%= t("inventories.custom_fields_table.field_type") %></th>
         <th><%= t("inventories.custom_fields_table.description") %></th>
@@ -34,7 +35,7 @@
           <% end %>
         >
           <% if selectable %>
-            <td title="Drag to reorder">
+            <td title="<%= t('inventories.custom_fields_table.drag_to_reorder') %>">
               <i class="bi bi-grip-vertical"></i>
             </td>
             <td>
@@ -46,7 +47,7 @@
           <td>
             <%= t("inventories.custom_fields.field_types.#{field.field_type}") %>
           </td>
-          <td><%= field.description.presence || "—" %></td>
+          <td><%= field.description.presence || "\u2014" %></td>
           <td>
             <%= field.show_in_table? ? t("common.yes") : t("common.no") %>
           </td>
