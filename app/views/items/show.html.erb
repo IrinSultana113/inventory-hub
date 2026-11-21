@@ -1,41 +1,43 @@
-
 <div class="container mt-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h3><%= @user.username %></h3>
-      <p class="text-muted"><%= t("users.profile.title") %></p>
-    </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Item Details</h2>
+
+    <%= link_to "Back to Items",
+        inventory_items_path(@inventory),
+        class: "btn btn-outline-secondary" %>
   </div>
 
-  <h4 class="mt-4"><%= t("users.profile.public_inventories") %></h4>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Custom ID: <%= @item.custom_id %></h4>
 
-  <% if @inventories.any? %>
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th><%= t("users.profile.inventory_title") %></th>
-            <th><%= t("users.profile.category") %></th>
-            <th><%= t("users.profile.created_at") %></th>
-          </tr>
-        </thead>
+      <p>
+        <strong>Created By:</strong>
+        <%= @item.user&.username || "Unknown" %>
+      </p>
 
-        <tbody>
-          <% @inventories.each do |inventory| %>
-            <tr>
-              <td>
-                <%= link_to inventory.title, inventory_path(inventory) %>
-              </td>
-              <td><%= inventory.category %></td>
-              <td><%= l(inventory.created_at, format: :long) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <p>
+        <strong>Created At:</strong>
+        <%= l(@item.created_at, format: :long) %>
+      </p>
+
+      <hr>
+
+      <h5 class="mb-3">Custom Field Values</h5>
+
+      <% if @custom_field_values.any? %>
+        <% @custom_field_values.each do |field_value| %>
+          <% field = field_value.custom_field %>
+          <% next unless field %>
+
+          <p>
+            <strong><%= field.title %>:</strong>
+            <%= field_value.value.presence || "—" %>
+          </p>
+        <% end %>
+      <% else %>
+        <p class="text-muted">No custom field values available.</p>
+      <% end %>
     </div>
-  <% else %>
-    <p class="text-muted">
-      <%= t("users.profile.no_public_inventories") %>
-    </p>
-  <% end %>
+  </div>
 </div>

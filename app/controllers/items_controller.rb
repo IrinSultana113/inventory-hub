@@ -49,6 +49,7 @@ class ItemsController < ApplicationController
     build_missing_custom_field_values
   end
 
+  
   def update
     attributes = item_params
 
@@ -59,11 +60,11 @@ class ItemsController < ApplicationController
         sequence = @inventory.items.maximum(:sequence_number).to_i + 1
 
         if assign_unique_custom_id(
-          @item,
+         @item,
           sequence_number: sequence,
           except_id: @item.id
         )
-          updated = @item.update(attributes.except(:custom_id))
+         updated = @item.update(attributes.except(:custom_id))
         end
       end
     else
@@ -75,8 +76,13 @@ class ItemsController < ApplicationController
                 notice: "Item updated successfully."
     else
       render_item_form(:edit)
-      end
-  end
+        end
+
+  rescue ActiveRecord::RecordNotUnique
+    @item.errors.add(:custom_id, "has already been taken")
+      render_item_form(:edit)
+end
+
 
   def destroy
     @item.destroy

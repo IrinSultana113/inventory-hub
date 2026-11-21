@@ -5,6 +5,8 @@ export default class extends Controller {
   static targets = ["list", "preview", "template"]
 
   connect() {
+    this.draggedElement = null
+
     this.updateElementInputs()
     this.updatePreview()
 
@@ -22,14 +24,14 @@ export default class extends Controller {
 
   add(event) {
     const currentCount =
-    this.listTarget.querySelectorAll("[data-id-element]").length
+      this.listTarget.querySelectorAll("[data-id-element]").length
 
-      if (currentCount >= 10) {
-        alert(this.element.dataset.maxElementsMessage)
+    if (currentCount >= 10) {
+      alert(this.element.dataset.maxElementsMessage)
       return
-      }
-    const type = event.currentTarget.dataset.type
+    }
 
+    const type = event.currentTarget.dataset.type
     const template = this.templateTarget.content.cloneNode(true)
     const element = template.querySelector("[data-id-element]")
 
@@ -72,13 +74,17 @@ export default class extends Controller {
 
   remove(event) {
     event.currentTarget.closest("[data-id-element]").remove()
+
+    this.updateElementInputs()
     this.updatePreview()
   }
 
   dragStart(event) {
     this.draggedElement = event.currentTarget
+
     event.dataTransfer.effectAllowed = "move"
     event.dataTransfer.setData("text/plain", "move")
+
     this.draggedElement.classList.add("opacity-50")
   }
 
@@ -88,6 +94,8 @@ export default class extends Controller {
     }
 
     this.draggedElement = null
+
+    this.updateElementInputs()
     this.updatePreview()
   }
 
@@ -100,17 +108,23 @@ export default class extends Controller {
   handleDocumentDrop(event) {
     if (!this.draggedElement) return
 
-    if (!this.listTarget.contains(event.target)) {
-      this.draggedElement.classList.remove("opacity-50")
-      this.draggedElement = null
+    // Drop inside the list is handled by dropInside().
+    if (this.listTarget.contains(event.target)) return
 
-      this.updateElementInputs()
-      this.updatePreview()
-    }
+    event.preventDefault()
+
+    // Dropped outside the form: remove the element.
+    this.draggedElement.remove()
+    this.draggedElement = null
+
+    this.updateElementInputs()
+    this.updatePreview()
   }
+
   allowDrop(event) {
     event.preventDefault()
   }
+
   dropInside(event) {
     event.preventDefault()
     event.stopPropagation()
@@ -125,6 +139,7 @@ export default class extends Controller {
       this.listTarget.appendChild(this.draggedElement)
     } else {
       const position = targetElement.getBoundingClientRect()
+
       const shouldInsertBefore =
         event.clientY < position.top + position.height / 2
 
@@ -168,7 +183,6 @@ export default class extends Controller {
     })
   }
 
-  
   updatePreview() {
     const elements = this.listTarget.querySelectorAll("[data-id-element]")
 
@@ -181,10 +195,13 @@ export default class extends Controller {
       if (type === "fixed_text") {
         preview += element.querySelector("[data-value-input]").value
 
-      } else if (
-        ["sequence", "random_20bit", "random_32bit",
-        "random_6_digit", "random_9_digit"].includes(type)
-      ) {
+      } else if ([
+        "sequence",
+        "random_20bit",
+        "random_32bit",
+        "random_6_digit",
+        "random_9_digit"
+      ].includes(type)) {
         const formatInput = element.querySelector("[data-format-input]")
         const format = formatInput.value.trim()
 
@@ -232,14 +249,13 @@ export default class extends Controller {
     }
 
     this.previewTarget.textContent =
-     preview || this.element.dataset.emptyPreviewMessage
-    }
+      preview || this.element.dataset.emptyPreviewMessage
+  }
 
   elementName(type) {
     const names = JSON.parse(this.element.dataset.elementNames)
     return names[type] || type
-    }
-
+  }
 
   isValidNumberFormat(format) {
     return /^[DXdx][1-9][0-9]*$/.test(format)
@@ -256,7 +272,6 @@ export default class extends Controller {
       .padStart(length, "0")
   }
 
-
   exampleRandom(type, format) {
     const examples = {
       random_20bit: 1234567,
@@ -266,5 +281,5 @@ export default class extends Controller {
     }
 
     return this.exampleNumber(format, examples[type])
-}
+  }
 }
